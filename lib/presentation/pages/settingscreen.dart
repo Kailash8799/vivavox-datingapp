@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vivavox/presentation/pages/splashscreen.dart';
 
@@ -22,6 +23,8 @@ class SettingScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarIconBrightness: Brightness.dark),
           title: const Text("Settings"),
         ),
         body: Column(

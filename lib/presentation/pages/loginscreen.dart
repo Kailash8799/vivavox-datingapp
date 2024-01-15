@@ -1,8 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:vivavox/presentation/pages/splashscreen.dart';
+import 'package:vivavox/presentation/pages/forgotpassword.dart';
+import 'package:vivavox/presentation/pages/homescreen.dart';
 import 'package:vivavox/presentation/widgets/snakbar.dart';
+import 'package:vivavox/services/auth/auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,31 +19,54 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final formkey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   static bool _isPasswordhidden = true;
 
   Future<void> userLogin(BuildContext context) async {
-    String email = _email.text.trim();
-    String password = _password.text;
+    final String email = _email.text.trim();
+    final String password = _password.text.trim();
 
     if (formkey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
       try {
         await Future.delayed(const Duration(seconds: 1));
         if (!context.mounted) return;
-
-        SnakbarComp.showSnackBar(context, "Login In");
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) {
-              return const Splashscreen();
-            },
-          ),
-          (route) => false,
+        AuthUser user = AuthUser();
+        Map<String, dynamic> responce = await user.loginUser(
+          email: email,
+          password: password,
         );
+        await Future.delayed(const Duration(seconds: 1));
+        if (!context.mounted) return;
+        if (responce["success"] == true) {
+          SnakbarComp.showSnackBar(
+            context,
+            responce["message"],
+          );
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+            builder: (context) {
+              return const HomeScreen();
+            },
+          ), (route) => false);
+        } else {
+          SnakbarComp.showSnackBar(
+            context,
+            responce["message"],
+          );
+        }
       } catch (e) {
-        SnakbarComp.showSnackBar(context, "Some error accured!");
+        SnakbarComp.showSnackBar(
+          context,
+          "Some error accured!",
+        );
       }
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<void> signInWithGoogle(BuildContext context) async {
@@ -60,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) {
-            return const Splashscreen();
+            return const HomeScreen();
           },
         ),
         (route) => false,
@@ -78,8 +105,8 @@ class _LoginScreenState extends State<LoginScreen> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-            Color.fromARGB(255, 10, 57, 102),
-            Color.fromARGB(255, 4, 16, 27),
+            Color.fromARGB(255, 221, 231, 239),
+            Color.fromARGB(255, 166, 186, 205),
           ])),
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -88,6 +115,8 @@ class _LoginScreenState extends State<LoginScreen> {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarIconBrightness: Brightness.dark),
             title: const Text("Login"),
           ),
           backgroundColor: Colors.transparent,
@@ -104,6 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(50),
                         backgroundColor: Colors.white,
+                        elevation: 0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     child: Row(
@@ -112,13 +142,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         ShaderMask(
                           shaderCallback: (bounds) {
                             return const LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.red,
-                                  Colors.green,
-                                  Colors.blue
-                                ]).createShader(bounds);
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [Colors.red, Colors.green, Colors.blue],
+                            ).createShader(bounds);
                           },
                           child: const FaIcon(
                             FontAwesomeIcons.google,
@@ -127,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: Text(
-                            "Sign in with google",
+                            "Continue with google",
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 19,
@@ -145,6 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
+                      elevation: 0,
                       minimumSize: const Size.fromHeight(50),
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -160,8 +188,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Colors.blueAccent,
                                 Colors.blue,
+                                Colors.lightBlue,
                                 Colors.blue
                               ],
                             ).createShader(bounds);
@@ -173,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: Text(
-                            "Sign in with facebook",
+                            "Continue with facebook",
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 19,
@@ -294,22 +322,52 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      top: 20, left: 20, right: 20, bottom: 10),
-                  child: ElevatedButton(
-                    onPressed: () => userLogin(context),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(50),
-                        backgroundColor: const Color.fromARGB(255, 33, 90, 143),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
+                      top: 5, left: 20, right: 20, bottom: 10),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(CupertinoModalPopupRoute(
+                        builder: (context) {
+                          return const ForgotPasswordScreen();
+                        },
+                      ));
+                    },
                     child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Padding(
                           padding: EdgeInsets.only(left: 0),
                           child: Text(
-                            "Sign in with email",
+                            "Forgot password?",
                             style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 10, left: 20, right: 20, bottom: 10),
+                  child: ElevatedButton(
+                    onPressed: () => userLogin(context),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(50),
+                        backgroundColor: Colors.orange,
+                        elevation: 0.4,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 0),
+                          child: Text(
+                            isLoading ? "Loading..." : "Sign in with email",
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 19,
                               fontWeight: FontWeight.w700,

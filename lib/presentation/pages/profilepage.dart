@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:vivavox/presentation/pages/settingscreen.dart';
 
@@ -30,6 +31,8 @@ class _ProfilepageState extends State<Profilepage> {
           snap: true,
           surfaceTintColor: Colors.transparent,
           automaticallyImplyLeading: false,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarIconBrightness: Brightness.dark),
           leading: const Padding(
             padding: EdgeInsets.only(left: 15),
             child: CircleAvatar(
