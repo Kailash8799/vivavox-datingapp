@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vivavox/config/theme/theme.dart';
-import 'package:vivavox/presentation/pages/splashscreen.dart';
+import 'package:vivavox/presentation/pages/homescreen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: theme,
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.light,
-      home: const Splashscreen(),
+      home: const HomeScreen(),
     );
   }
 }
