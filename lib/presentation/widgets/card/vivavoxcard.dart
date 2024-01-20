@@ -40,7 +40,7 @@ class _VivavoxCardState extends State<VivavoxCard> {
         child: LayoutBuilder(builder: (context, constraints) {
           final provider = Provider.of<CardProvider>(context);
           final position = provider.position;
-          final milliseconds = provider.isDragging ? 0 : 500;
+          final milliseconds = provider.isDragging ? 0 : 400;
           final center = constraints.smallest.center(Offset.zero);
           final angle = provider.angle * pi / 180;
           final rotatedMatrix = Matrix4.identity()
