@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
+import 'package:vivavox/presentation/providers/cardprovider.dart';
+import 'package:vivavox/presentation/widgets/card/vivavoxcard.dart';
 
 class HomesubScreen extends StatefulWidget {
   const HomesubScreen({super.key});
-
   @override
   State<HomesubScreen> createState() => _HomesubScreenState();
 }
@@ -18,108 +20,191 @@ class _HomesubScreenState extends State<HomesubScreen> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Column(
-            children: [
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: CachedNetworkImage(
-                    imageUrl:
-                        "https://images.unsplash.com/photo-1631947430066-48c30d57b943?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fGJlYXV0aWZ1bCUyMGdpcmx8ZW58MHx8MHx8fDA%3D",
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Container(
-                height: 100,
-                width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                  gradient: LinearGradient(
-                    tileMode: TileMode.repeated,
-                    colors: [
-                      Color.fromARGB(255, 34, 65, 92),
-                      Color.fromARGB(255, 6, 16, 27),
-                      Colors.black
-                    ],
-                    stops: [0.1, 0.6, 0.9],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: ShaderMask(
-              shaderCallback: (bounds) {
-                return LinearGradient(
-                  colors: [
-                    Colors.white.withOpacity(0),
-                    Colors.white.withOpacity(0),
-                    Colors.white.withOpacity(1),
-                  ],
-                  stops: const [0.1, 0.4, 0.8],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ).createShader(bounds);
-              },
-              child: Container(
-                decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                      Color.fromARGB(255, 10, 57, 102),
-                      Colors.black,
-                    ])),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 10,
-            left: 0,
-            right: 0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: 60,
-                    width: 60,
-                    decoration: const BoxDecoration(
-                        color: Colors.yellow, shape: BoxShape.circle),
-                  ),
-                  Container(
-                    height: 60,
-                    width: 60,
-                    decoration: const BoxDecoration(
-                        color: Colors.yellow, shape: BoxShape.circle),
-                  ),
-                  Container(
-                    height: 60,
-                    width: 60,
-                    decoration: const BoxDecoration(
-                        color: Colors.yellow, shape: BoxShape.circle),
-                  ),
-                  Container(
-                    height: 60,
-                    width: 60,
-                    decoration: const BoxDecoration(
-                        color: Colors.yellow, shape: BoxShape.circle),
-                  ),
-                ],
-              ),
-            ),
+          buildCards(),
+          Consumer<CardProvider>(
+            builder: (context, value, child) {
+              return value.assetImages.isNotEmpty
+                  ? Positioned(
+                      bottom: 10,
+                      left: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(133, 229, 232, 220)
+                                    .withOpacity(0.2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: ShaderMask(
+                                  shaderCallback: (bounds) {
+                                    return LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        const Color.fromARGB(255, 227, 209, 15)
+                                            .withOpacity(1),
+                                        const Color.fromRGBO(255, 255, 255, 1)
+                                            .withOpacity(0.7),
+                                        const Color.fromARGB(255, 255, 223, 16)
+                                            .withOpacity(1),
+                                      ],
+                                    ).createShader(bounds);
+                                  },
+                                  child: const Icon(
+                                    CupertinoIcons.restart,
+                                    color: Color.fromARGB(255, 255, 239, 69),
+                                    size: 30,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                value.dislike();
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                height: value.isDisLike ? 80 : 60,
+                                width: value.isDisLike ? 80 : 60,
+                                decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(133, 229, 232, 220)
+                                          .withOpacity(0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: ShaderMask(
+                                    shaderCallback: (bounds) {
+                                      return const LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          Color.fromARGB(255, 233, 240, 232),
+                                          Color.fromARGB(255, 255, 255, 255),
+                                          Color.fromARGB(255, 4, 18, 5)
+                                        ],
+                                      ).createShader(bounds);
+                                    },
+                                    child: const Icon(
+                                      CupertinoIcons.multiply,
+                                      color: Color(0xFFE91E63),
+                                      size: 50,
+                                      weight: 900,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                value.like();
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                height: value.isLike ? 80 : 60,
+                                width: value.isLike ? 80 : 60,
+                                decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(133, 229, 232, 220)
+                                          .withOpacity(0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: ShaderMask(
+                                    shaderCallback: (bounds) {
+                                      return const LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          Color.fromARGB(255, 233, 240, 232),
+                                          Color.fromARGB(255, 255, 255, 255),
+                                          Color.fromARGB(255, 4, 18, 5)
+                                        ],
+                                      ).createShader(bounds);
+                                    },
+                                    child: const Icon(
+                                      CupertinoIcons.heart_fill,
+                                      color: Color.fromARGB(255, 64, 205, 68),
+                                      size: 44,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                value.superlike();
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                height: value.isSuperLike ? 70 : 50,
+                                width: value.isSuperLike ? 70 : 50,
+                                decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(133, 229, 232, 220)
+                                          .withOpacity(0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: ShaderMask(
+                                    shaderCallback: (bounds) {
+                                      return const LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Color.fromARGB(255, 233, 240, 232),
+                                          Color.fromARGB(255, 255, 255, 255),
+                                          Color.fromARGB(255, 92, 82, 82)
+                                        ],
+                                      ).createShader(bounds);
+                                    },
+                                    child: const Icon(
+                                      CupertinoIcons.bolt_fill,
+                                      color: Color(0xFF9C27B0),
+                                      size: 30,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : const SizedBox();
+            },
           )
         ],
       ),
     );
+  }
+
+  Widget buildCards() {
+    final provider = Provider.of<CardProvider>(context);
+    final assetImages = provider.assetImages;
+    return assetImages.isEmpty
+        ? Center(
+            child: ElevatedButton(
+                child: const Text('Restart'),
+                onPressed: () {
+                  provider.userimages();
+                }))
+        : Stack(
+            alignment: AlignmentDirectional.center,
+            children: assetImages
+                .map((assetImage) => VivavoxCard(
+                      assetImage: assetImage,
+                      isFront: assetImages.last == assetImage,
+                    ))
+                .toList(),
+          );
   }
 }

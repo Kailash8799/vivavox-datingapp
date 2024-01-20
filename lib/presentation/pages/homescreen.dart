@@ -4,6 +4,8 @@ import 'package:vivavox/presentation/pages/homesubscreen/homesubscreen.dart';
 import 'package:vivavox/presentation/pages/homesubscreen/likessubscreen.dart';
 import 'package:vivavox/presentation/pages/homesubscreen/messagessubscreen.dart';
 import 'package:vivavox/presentation/pages/homesubscreen/profilesubscreen.dart';
+import 'package:vivavox/presentation/pages/loginscreen.dart';
+import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,7 +23,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  final _pages = const [
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+  }
+
+  final List<Widget> _pages = const <Widget>[
     HomesubScreen(),
     LikessubScreen(),
     MessagesubScreen(),
@@ -50,7 +58,10 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(right: 4),
             child: _index == 0
                 ? IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(NoAnimationTransition(
+                          builder: (context) => const LoginScreen()));
+                    },
                     icon: const Icon(
                       CupertinoIcons.bell_solid,
                       color: Color(0xFFFE3C72),
@@ -134,10 +145,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: changeIndex,
         children: _pages,
       ),
+      // body: IndexedStack(
+      //   index: _index,
+      //   children: _pages,
+      // ),
     );
   }
 }

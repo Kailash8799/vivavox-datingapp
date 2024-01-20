@@ -4,7 +4,7 @@ ThemeData theme = ThemeData(
   useMaterial3: true,
   colorScheme: const ColorScheme(
     brightness: Brightness.light,
-    background: Colors.white,
+    background: Colors.black,
     error: Colors.red,
     onBackground: Colors.white,
     onError: Colors.red,
