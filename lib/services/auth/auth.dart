@@ -50,6 +50,25 @@ class AuthUser {
     }
   }
 
+  Future<Map<String, dynamic>> getProfile({
+    required String token,
+  }) async {
+    try {
+      final res = await http.post(
+        Uri.parse("$_baseUrl/v1/users/getprofile"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{'token': token}),
+      );
+      Map<String, dynamic> data =
+          jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
+      return data;
+    } catch (e) {
+      return {"success": false, "message": "Some error occurred!"};
+    }
+  }
+
   Future<Map<String, dynamic>> resetPassword({required String email}) async {
     try {
       final res = await http.post(

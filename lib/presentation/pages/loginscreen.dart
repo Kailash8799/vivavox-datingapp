@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vivavox/presentation/pages/forgotpassword.dart';
 import 'package:vivavox/presentation/pages/homescreen.dart';
+import 'package:vivavox/presentation/providers/profileprovider.dart';
 import 'package:vivavox/presentation/widgets/snakbar.dart';
 import 'package:vivavox/services/auth/auth.dart';
+import 'package:vivavox/services/model/profileinfo.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -32,16 +36,23 @@ class _LoginScreenState extends State<LoginScreen> {
         isLoading = true;
       });
       try {
-        await Future.delayed(const Duration(seconds: 1));
+        await Future.delayed(const Duration(milliseconds: 300));
         if (!context.mounted) return;
         AuthUser user = AuthUser();
         Map<String, dynamic> responce = await user.loginUser(
           email: email,
           password: password,
         );
-        await Future.delayed(const Duration(seconds: 1));
+        await Future.delayed(const Duration(milliseconds: 300));
         if (!context.mounted) return;
         if (responce["success"] == true) {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString("auth_token", responce["token"]);
+          print(responce["profile"]["location"]);
+          if (!context.mounted) return;
+          final provider = Provider.of<ProfileProvider>(context, listen: false);
+          // provider.addProfile(
+          //     profileinfo: Profileinfo.fromJson(responce["profile"]));
           SnakbarComp.showSnackBar(
             context,
             responce["message"],
@@ -58,6 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         }
       } catch (e) {
+        print(e);
         SnakbarComp.showSnackBar(
           context,
           "Some error accured!",

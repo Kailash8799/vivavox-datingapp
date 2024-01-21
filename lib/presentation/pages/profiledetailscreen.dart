@@ -84,52 +84,113 @@ class _ProfileDetailScreen extends State<ProfileDetailScreen> {
             ),
           ),
         ),
-        SliverToBoxAdapter(
-          child: Container(
-            margin: const EdgeInsets.only(top: 10),
-            padding: const EdgeInsets.all(15),
-            width: size.width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: const Color.fromARGB(255, 19, 21, 23),
-            ),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              RichText(
-                text: const TextSpan(
-                  children: [
-                    WidgetSpan(
-                        child: Icon(
-                      CupertinoIcons.search,
-                      color: Color.fromARGB(255, 133, 138, 142),
-                      size: 17,
-                    )),
-                    TextSpan(text: "  "),
-                    TextSpan(
-                      text: "Looking for",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 133, 138, 142),
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text(
-                "❤️ Short time fun",
-                style: TextStyle(
-                  fontSize: 25,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                ),
-              )
-            ]),
-          ),
-        ),
+        SliverList.builder(
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            return buildList(
+              icon: CupertinoIcons.search,
+              title: "Looking for",
+              desc: "❤️ Short time fun",
+            );
+          },
+        )
       ]),
     );
+  }
+
+  Widget buildList(
+      {required IconData icon,
+      List<Map<String, String>>? listitem,
+      String? desc,
+      required String title}) {
+    if (desc != null) {
+      return Container(
+        margin: const EdgeInsets.only(top: 10, left: 8, right: 8),
+        padding: const EdgeInsets.all(15),
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: const Color.fromARGB(255, 19, 21, 23),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          RichText(
+            text: TextSpan(
+              children: [
+                WidgetSpan(
+                    child: Icon(
+                  icon,
+                  color: const Color.fromARGB(255, 133, 138, 142),
+                  size: 17,
+                )),
+                const TextSpan(text: "  "),
+                TextSpan(
+                  text: title,
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 133, 138, 142),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            desc,
+            style: const TextStyle(
+              fontSize: 25,
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+          )
+        ]),
+      );
+    }
+    if (listitem != null) {
+      return Container(
+        margin: const EdgeInsets.only(top: 10, left: 8, right: 8),
+        padding: const EdgeInsets.all(15),
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: const Color.fromARGB(255, 19, 21, 23),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          RichText(
+            text: TextSpan(
+              children: [
+                WidgetSpan(
+                    child: Icon(
+                  icon,
+                  color: const Color.fromARGB(255, 133, 138, 142),
+                  size: 17,
+                )),
+                const TextSpan(text: "  "),
+                TextSpan(
+                  text: title,
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 133, 138, 142),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          const Text(
+            "❤️ Short time fun",
+            style: TextStyle(
+              fontSize: 25,
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+          )
+        ]),
+      );
+    }
+    return const SizedBox();
   }
 }
