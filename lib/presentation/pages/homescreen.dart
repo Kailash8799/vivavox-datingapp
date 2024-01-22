@@ -76,11 +76,11 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: (value) {
           setState(() {
             _index = value;
-            _pageController.animateToPage(
-              value,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.linear,
-            );
+            // _pageController.animateToPage(
+            //   value,
+            //   duration: const Duration(milliseconds: 300),
+            //   curve: Curves.linear,
+            // );
           });
         },
         type: BottomNavigationBarType.fixed,
@@ -144,16 +144,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: _pageController,
-        onPageChanged: changeIndex,
-        children: _pages,
-      ),
-      // body: IndexedStack(
-      //   index: _index,
+      // body: PageView(
+      //   physics: const NeverScrollableScrollPhysics(),
+      //   controller: _pageController,
+      //   onPageChanged: changeIndex,
       //   children: _pages,
       // ),
+
+      body: IndexedStack(
+        index: _index,
+        children: _pages,
+      ),
     );
   }
 }

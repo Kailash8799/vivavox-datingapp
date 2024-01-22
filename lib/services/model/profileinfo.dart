@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class Profileinfo {
   final String id;
   final String userid;
@@ -16,9 +14,9 @@ class Profileinfo {
   final String? relationshipType;
   final List<String>? language;
   final List<String>? images;
-  // final Basics? basics;
-  // final Lifestyle? lifeStyle;
-  // final About? askMeAbout;
+  final Basics? basics;
+  final Lifestyle? lifeStyle;
+  final About? askMeAbout;
   final String? jobTitle;
   final String? companyName;
   final String? collageName;
@@ -40,9 +38,9 @@ class Profileinfo {
     this.language,
     this.location,
     this.aboutme,
-    // this.askMeAbout,
-    // this.basics,
-    // this.lifeStyle,
+    this.askMeAbout,
+    this.basics,
+    this.lifeStyle,
     this.collageName,
     this.companyName,
     this.height,
@@ -63,55 +61,55 @@ class Profileinfo {
     this.profileimage,
   });
 
-  factory Profileinfo.fromJson(Map<String, dynamic> json) => Profileinfo(
-        id: json["_id"] as String,
-        userid: json['userId'] as String,
-        username: json['username'],
-        email: json['email'],
-        // gender: json["gender"] == null ? null : json["gender"] as String,
-        // location: json["location"] == null ? null : json["location"] as String,
-        // birthdate:
-        //     json["birthdate"] == null ? null : json["birthdate"] as DateTime,
-        // language: List<String>.from(json['language'].map((x) => x)),
-        // aboutme: json["aboutme"] == null ? null : json["aboutme"] as String,
-        // collageName:
-        //     json["collageName"] == null ? null : json["collageName"] as String,
-        // companyName:
-        //     json["companyName"] == null ? null : json["companyName"] as String,
-        // instagranId:
-        //     json["instagranId"] == null ? null : json["instagranId"] as String,
-        // height: json["height"] == null ? null : json["height"] as String,
-        // interest: json["interest"] == null ? null : json["interest"] as String,
-        // jobTitle: json["jobTitle"] == null ? null : json["jobTitle"] as String,
-        // liviningIn:
-        //     json["liviningIn"] == null ? null : json["liviningIn"] as String,
-        // mobileno: json["mobileno"] == null ? null : json["mobileno"] as String,
-        // relationshipGoal: json["relationshipGoal"] == null
-        //     ? null
-        //     : json["relationshipGoal"] as String,
-        // relationshipType: json["relationshipType"] == null
-        //     ? null
-        //     : json["relationshipType"] as String,
-        // sexualOrientation: json["sexualOrientation"] == null
-        //     ? null
-        //     : json["sexualOrientation"] as String,
-        // askMeAbout: About.fromJson(json["location"]),
-        // basics: Basics.fromJson(json["basics"]),
-        // lifeStyle: Lifestyle.fromJson(json['lifeStyle']),
-        // premiumuser: json["premiumuser"] as bool,
-        // premiumtype: json["premiumtype"] as String,
-        // premiumenddate: json["premiumenddate"] == null
-        //     ? null
-        //     : json["premiumenddate"] as DateTime,
-        // premiumstartdate: json["premiumstartdate"] == null
-        //     ? null
-        //     : json["premiumstartdate"] as DateTime,
-        // images: List<String>.from(json['images'].map((x) => x)),
-        // profileimage: json["profileimage"] == null
-        //     ? null
-        //     : json["profileimage"] as String,
-      );
-
+  factory Profileinfo.fromJson(Map<String, dynamic> json) {
+    return Profileinfo(
+      id: json["_id"],
+      userid: json['userid'],
+      username: json['username'],
+      email: json['email'],
+      gender: json["gender"] == null ? null : json["gender"] as String,
+      location: json["location"] == null ? null : json["location"] as String,
+      birthdate:
+          json["birthdate"] == null ? null : json["birthdate"] as DateTime,
+      language: List<String>.from(json['language'].map((x) => x)),
+      aboutme: json["aboutme"] == null ? null : json["aboutme"] as String,
+      collageName:
+          json["collageName"] == null ? null : json["collageName"] as String,
+      companyName:
+          json["companyName"] == null ? null : json["companyName"] as String,
+      instagranId:
+          json["instagranId"] == null ? null : json["instagranId"] as String,
+      height: json["height"] == null ? null : json["height"] as String,
+      interest: json["interest"] == null ? null : json["interest"] as String,
+      jobTitle: json["jobTitle"] == null ? null : json["jobTitle"] as String,
+      liviningIn:
+          json["liviningIn"] == null ? null : json["liviningIn"] as String,
+      mobileno: json["mobileno"] == null ? null : json["mobileno"] as String,
+      relationshipGoal: json["relationshipGoal"] == null
+          ? null
+          : json["relationshipGoal"] as String,
+      relationshipType: json["relationshipType"] == null
+          ? null
+          : json["relationshipType"] as String,
+      sexualOrientation: json["sexualOrientation"] == null
+          ? null
+          : json["sexualOrientation"] as String,
+      askMeAbout: About.fromJson(json["location"]),
+      basics: Basics.fromJson(json["basics"]),
+      lifeStyle: Lifestyle.fromJson(json['lifeStyle']),
+      premiumuser: json["premiumuser"] as bool,
+      premiumtype: json["premiumtype"] as String,
+      premiumenddate: json["premiumenddate"] == null
+          ? null
+          : json["premiumenddate"] as DateTime,
+      premiumstartdate: json["premiumstartdate"] == null
+          ? null
+          : json["premiumstartdate"] as DateTime,
+      images: List<String>.from(json['images'].map((x) => x)),
+      profileimage:
+          json["profileimage"] == null ? null : json["profileimage"] as String,
+    );
+  }
   Map<String, dynamic> toJson() => {
         "id": id,
         "userid": userid,
@@ -132,9 +130,9 @@ class Profileinfo {
         "relationshipGoal": relationshipGoal,
         "relationshipType": relationshipType,
         "sexualOrientation": sexualOrientation,
-        // "askMeAbout": askMeAbout,
-        // "basics": basics,
-        // "lifeStyle": lifeStyle,
+        "askMeAbout": askMeAbout,
+        "basics": basics,
+        "lifeStyle": lifeStyle,
         "birthdate": birthdate,
         "premiumuser": premiumuser,
         "premiumtype": premiumtype,
@@ -164,16 +162,34 @@ class Basics {
     this.loveStyle,
   });
 
-  factory Basics.fromJson(Map<String, dynamic> json) => Basics(
-        zodiac: json['zodiac'],
-        eduction: json["eduction"],
-        familyPlan: json["familyPlan"],
-        communication: json["communication"],
-        covidVaccine: json["covidVaccine"],
-        personalityType: json["personalityType"],
-        loveStyle: json["loveStyle"],
+  factory Basics.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return Basics(
+        zodiac: null,
+        eduction: null,
+        familyPlan: null,
+        communication: null,
+        covidVaccine: null,
+        personalityType: null,
+        loveStyle: null,
       );
-
+    }
+    return Basics(
+      zodiac: json["zodiac"] == null ? null : json["zodiac"] as String,
+      eduction: json["eduction"] == null ? null : json["eduction"] as String,
+      familyPlan:
+          json["familyPlan"] == null ? null : json["familyPlan"] as String,
+      communication: json["communication"] == null
+          ? null
+          : json["communication"] as String,
+      covidVaccine:
+          json["covidVaccine"] == null ? null : json["covidVaccine"] as String,
+      personalityType: json["personalityType"] == null
+          ? null
+          : json["personalityType"] as String,
+      loveStyle: json["loveStyle"] == null ? null : json["loveStyle"] as String,
+    );
+  }
   Map<String, dynamic> toJson() => {
         "zodiac": zodiac,
         "eduction": eduction,
@@ -204,15 +220,33 @@ class Lifestyle {
     this.sleepingHabits,
   });
 
-  factory Lifestyle.fromJson(Map<String, dynamic> json) => Lifestyle(
-        pets: json['pets'],
-        dietaryPreference: json["dietaryPreference"],
-        drinking: json["drinking"],
-        sleepingHabits: json["sleepingHabits"],
-        smoking: json["smoking"],
-        socialMedia: json["socialMedia"],
-        workout: json["workout"],
+  factory Lifestyle.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return Lifestyle(
+        pets: null,
+        dietaryPreference: null,
+        drinking: null,
+        sleepingHabits: null,
+        smoking: null,
+        socialMedia: null,
+        workout: null,
       );
+    }
+    return Lifestyle(
+      pets: json["pets"] == null ? null : json["pets"] as String,
+      dietaryPreference: json["dietaryPreference"] == null
+          ? null
+          : json["dietaryPreference"] as String,
+      drinking: json["drinking"] == null ? null : json["drinking"] as String,
+      sleepingHabits: json["sleepingHabits"] == null
+          ? null
+          : json["sleepingHabits"] as String,
+      smoking: json["smoking"] == null ? null : json["smoking"] as String,
+      socialMedia:
+          json["socialMedia"] == null ? null : json["socialMedia"] as String,
+      workout: json["workout"] == null ? null : json["workout"] as String,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "pets": pets,
@@ -236,12 +270,22 @@ class About {
     this.myWeekends,
   });
 
-  factory About.fromJson(Map<String, dynamic> json) => About(
-        goingOut: json['goingOut'],
-        myWeekends: json['myWeekends'],
-        meandmyphone: json['meandmyphone'],
+  factory About.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return About(
+        goingOut: null,
+        myWeekends: null,
+        meandmyphone: null,
       );
-
+    }
+    return About(
+      goingOut: json["goingOut"] == null ? null : json["goingOut"] as String,
+      myWeekends:
+          json["myWeekends"] == null ? null : json["myWeekends"] as String,
+      meandmyphone:
+          json["meandmyphone"] == null ? null : json["meandmyphone"] as String,
+    );
+  }
   Map<String, dynamic> toJson() => {
         "goingOut": goingOut,
         "myWeekends": myWeekends,

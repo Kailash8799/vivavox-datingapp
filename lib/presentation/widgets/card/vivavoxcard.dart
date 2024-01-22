@@ -5,13 +5,14 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:vivavox/presentation/pages/profiledetailscreen.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
+import 'package:vivavox/services/model/profileinfo.dart';
 
 class VivavoxCard extends StatefulWidget {
-  final String assetImage;
+  final Profileinfo profile;
   final bool isFront;
   const VivavoxCard({
     super.key,
-    required this.assetImage,
+    required this.profile,
     required this.isFront,
   });
   @override
@@ -84,9 +85,19 @@ class _VivavoxCardState extends State<VivavoxCard> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Hero(
-                    tag: widget.assetImage,
+                    tag: widget.profile.id,
                     child: CachedNetworkImage(
-                      imageUrl: widget.assetImage,
+                      imageUrl: widget.profile.profileimage ?? "",
+                      placeholder: (context, url) {
+                        return Container();
+                      },
+                      errorWidget: (context, url, error) {
+                        return const Center(
+                            child: Icon(
+                          Icons.error,
+                          color: Colors.red,
+                        ));
+                      },
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
                       fit: BoxFit.cover,
@@ -157,9 +168,9 @@ class _VivavoxCardState extends State<VivavoxCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Hey Baby",
-                        style: TextStyle(
+                      Text(
+                        widget.profile.username,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 22,
                         ),
@@ -189,8 +200,8 @@ class _VivavoxCardState extends State<VivavoxCard> {
                             return const ProfileDetailScreen();
                           },
                           settings: RouteSettings(arguments: {
-                            "image": widget.assetImage,
-                            "keytag": widget.assetImage
+                            "profile": widget.profile,
+                            "keytag": widget.profile.id
                           }),
                         ),
                       );

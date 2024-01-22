@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:vivavox/presentation/pages/createaccountscreen.dart';
 import 'package:vivavox/presentation/pages/loginscreen.dart';
 import 'package:vivavox/presentation/pages/termandcondition.dart';
+import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 import 'package:vivavox/skeleton/imageskeleton.dart';
 
 class Splashscreen extends StatefulWidget {
@@ -52,9 +53,10 @@ class _SplashscreenState extends State<Splashscreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarIconBrightness: Brightness.dark),
+          statusBarIconBrightness: Brightness.light,
+        ),
         toolbarHeight: 0,
       ),
       body: SingleChildScrollView(
@@ -84,7 +86,7 @@ class _SplashscreenState extends State<Splashscreen> {
                           child: Text(
                             "Vivavox",
                             style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Ubuntu',
@@ -252,7 +254,7 @@ class _SplashscreenState extends State<Splashscreen> {
                   child: Text(
                     "Enjoy the new exprience of chating with global friend",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 23,
                       height: 1,
@@ -276,7 +278,7 @@ class _SplashscreenState extends State<Splashscreen> {
                   padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).push(CupertinoModalPopupRoute(
+                        Navigator.of(context).push(NoAnimationTransition(
                           builder: (context) {
                             return const LoginScreen();
                           },
@@ -302,7 +304,7 @@ class _SplashscreenState extends State<Splashscreen> {
                   padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).push(CupertinoModalPopupRoute(
+                        Navigator.of(context).push(NoAnimationTransition(
                           builder: (context) {
                             return const Createaccountscreen();
                           },
@@ -313,7 +315,7 @@ class _SplashscreenState extends State<Splashscreen> {
                         foregroundColor: Colors.grey,
                         elevation: 0,
                         minimumSize: const Size.fromHeight(50),
-                        backgroundColor: Colors.grey.withOpacity(0.1),
+                        backgroundColor: Colors.grey.withOpacity(0.4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
@@ -321,7 +323,7 @@ class _SplashscreenState extends State<Splashscreen> {
                       child: const Text(
                         "Signup",
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: 20,
                         ),
                       )),

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vivavox/services/model/profileinfo.dart';
 
 class ProfileDetailScreen extends StatefulWidget {
   const ProfileDetailScreen({super.key});
@@ -13,15 +14,19 @@ class _ProfileDetailScreen extends State<ProfileDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final data = ModalRoute.of(context)!.settings.arguments as Map;
+    final profiledetail = data["profile"] as Profileinfo;
+    final keytag = data["keytag"];
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
+        surfaceTintColor: Colors.transparent,
         toolbarHeight: 0,
       ),
       body: CustomScrollView(slivers: [
         SliverAppBar(
           pinned: true,
+          surfaceTintColor: Colors.transparent,
           title: RichText(
               text: const TextSpan(children: [
             TextSpan(
@@ -68,7 +73,7 @@ class _ProfileDetailScreen extends State<ProfileDetailScreen> {
         ),
         SliverToBoxAdapter(
           child: Hero(
-            tag: data["keytag"],
+            tag: keytag,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(14),
@@ -76,7 +81,21 @@ class _ProfileDetailScreen extends State<ProfileDetailScreen> {
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10)),
               child: CachedNetworkImage(
-                imageUrl: data["image"],
+                imageUrl: profiledetail.profileimage ?? "",
+                placeholder: (context, url) {
+                  return const Center(
+                    child: Icon(Icons.local_dining),
+                  );
+                },
+                errorWidget: (context, url, error) {
+                  return const Center(
+                    child: Icon(
+                      Icons.error,
+                      color: Colors.red,
+                      size: 30,
+                    ),
+                  );
+                },
                 height: size.height - 400,
                 width: size.width,
                 fit: BoxFit.cover,

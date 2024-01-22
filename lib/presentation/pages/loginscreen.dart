@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vivavox/presentation/pages/forgotpassword.dart';
 import 'package:vivavox/presentation/pages/homescreen.dart';
+import 'package:vivavox/presentation/providers/cardprovider.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
+import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 import 'package:vivavox/presentation/widgets/snakbar.dart';
 import 'package:vivavox/services/auth/auth.dart';
 import 'package:vivavox/services/model/profileinfo.dart';
@@ -48,16 +50,17 @@ class _LoginScreenState extends State<LoginScreen> {
         if (responce["success"] == true) {
           final SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString("auth_token", responce["token"]);
-          print(responce["profile"]["location"]);
           if (!context.mounted) return;
-          final provider = Provider.of<ProfileProvider>(context, listen: false);
-          // provider.addProfile(
-          //     profileinfo: Profileinfo.fromJson(responce["profile"]));
-          SnakbarComp.showSnackBar(
-            context,
-            responce["message"],
-          );
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          final profileprovider =
+              Provider.of<ProfileProvider>(context, listen: false);
+          final cardprovider =
+              Provider.of<CardProvider>(context, listen: false);
+          cardprovider.setMail(email: responce["profile"]["email"]);
+          cardprovider.initialize();
+          profileprovider.addProfile(
+              profileinfo: Profileinfo.fromJson(responce["profile"]));
+
+          Navigator.of(context).pushAndRemoveUntil(NoAnimationTransition(
             builder: (context) {
               return const HomeScreen();
             },
@@ -69,7 +72,6 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         }
       } catch (e) {
-        print(e);
         SnakbarComp.showSnackBar(
           context,
           "Some error accured!",
