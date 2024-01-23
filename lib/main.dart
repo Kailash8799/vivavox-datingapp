@@ -5,7 +5,7 @@ import 'package:vivavox/presentation/pages/landingpage.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(
     providers: [

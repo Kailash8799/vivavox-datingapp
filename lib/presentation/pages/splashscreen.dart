@@ -278,10 +278,12 @@ class _SplashscreenState extends State<Splashscreen> {
                   padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).push(NoAnimationTransition(
-                          builder: (context) {
+                        Navigator.of(context).push(AnimationTransition(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) {
                             return const LoginScreen();
                           },
+                          opaque: false,
                         ));
                       },
                       style: ElevatedButton.styleFrom(
@@ -304,10 +306,12 @@ class _SplashscreenState extends State<Splashscreen> {
                   padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).push(NoAnimationTransition(
-                          builder: (context) {
+                        Navigator.of(context).push(AnimationTransition(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) {
                             return const Createaccountscreen();
                           },
+                          opaque: false,
                         ));
                       },
                       style: ElevatedButton.styleFrom(

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:vivavox/presentation/pages/profiledetailscreen.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
 import 'package:vivavox/services/model/profileinfo.dart';
@@ -89,14 +90,48 @@ class _VivavoxCardState extends State<VivavoxCard> {
                     child: CachedNetworkImage(
                       imageUrl: widget.profile.profileimage ?? "",
                       placeholder: (context, url) {
-                        return Container();
+                        return Shimmer(
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color.fromARGB(255, 26, 26, 28),
+                              Color.fromARGB(255, 23, 23, 23),
+                              Color.fromARGB(255, 17, 17, 18),
+                            ],
+                            stops: [
+                              0.1,
+                              0.3,
+                              0.4,
+                            ],
+                            begin: Alignment(-1.0, -0.3),
+                            end: Alignment(1.0, 0.3),
+                            tileMode: TileMode.clamp,
+                          ),
+                          child: Container(
+                            color: Colors.red,
+                          ),
+                        );
                       },
                       errorWidget: (context, url, error) {
-                        return const Center(
-                            child: Icon(
-                          Icons.error,
-                          color: Colors.red,
-                        ));
+                        return Container(
+                          color: Colors.black,
+                          child: const Center(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                Icon(
+                                  Icons.error,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "Image loading error",
+                                  style: TextStyle(color: Colors.white),
+                                )
+                              ])),
+                        );
                       },
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
@@ -147,7 +182,7 @@ class _VivavoxCardState extends State<VivavoxCard> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                      Color.fromARGB(255, 10, 57, 102),
+                      Color.fromARGB(255, 32, 41, 45),
                       Colors.black,
                     ])),
               ),

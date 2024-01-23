@@ -60,11 +60,14 @@ class _LoginScreenState extends State<LoginScreen> {
           profileprovider.addProfile(
               profileinfo: Profileinfo.fromJson(responce["profile"]));
 
-          Navigator.of(context).pushAndRemoveUntil(NoAnimationTransition(
-            builder: (context) {
-              return const HomeScreen();
-            },
-          ), (route) => false);
+          Navigator.of(context).pushAndRemoveUntil(
+              AnimationTransition(
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return const HomeScreen();
+                },
+                opaque: false,
+              ),
+              (route) => false);
         } else {
           SnakbarComp.showSnackBar(
             context,

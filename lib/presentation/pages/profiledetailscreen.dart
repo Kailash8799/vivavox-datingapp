@@ -1,6 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vivavox/presentation/pages/editprofile.dart';
+import 'package:vivavox/presentation/pages/notfound.dart';
+import 'package:vivavox/presentation/providers/profileprovider.dart';
+import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 import 'package:vivavox/services/model/profileinfo.dart';
 
 class ProfileDetailScreen extends StatefulWidget {
@@ -13,7 +18,15 @@ class ProfileDetailScreen extends StatefulWidget {
 class _ProfileDetailScreen extends State<ProfileDetailScreen> {
   @override
   Widget build(BuildContext context) {
-    final data = ModalRoute.of(context)!.settings.arguments as Map;
+    final provider = Provider.of<ProfileProvider>(context, listen: false);
+    final routeinfo = ModalRoute.of(context)!.settings.arguments;
+    if (routeinfo == null) {
+      return const NotFound();
+    }
+    final data = routeinfo as Map;
+    if (data["profile"] == null) {
+      return const NotFound();
+    }
     final profiledetail = data["profile"] as Profileinfo;
     final keytag = data["keytag"];
     final size = MediaQuery.of(context).size;
@@ -23,103 +36,144 @@ class _ProfileDetailScreen extends State<ProfileDetailScreen> {
         surfaceTintColor: Colors.transparent,
         toolbarHeight: 0,
       ),
-      body: CustomScrollView(slivers: [
-        SliverAppBar(
-          pinned: true,
-          surfaceTintColor: Colors.transparent,
-          title: RichText(
-              text: const TextSpan(children: [
-            TextSpan(
-              text: "Neha,",
-              style: TextStyle(
-                fontSize: 25,
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
+      floatingActionButton: (provider.profile!.email == profiledetail.email &&
+              provider.profile!.id == profiledetail.id)
+          ? ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                    side: const BorderSide(width: 1),
+                    borderRadius: BorderRadius.circular(15)),
+                maximumSize: const Size(70, 60),
+                minimumSize: const Size(70, 60),
+                backgroundColor: const Color(0xFFFE3C72),
               ),
-            ),
-            TextSpan(text: "  "),
-            TextSpan(
-              text: "20",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              onPressed: () {
+                Navigator.of(context).push(
+                  AnimationTransition(
+                    pageBuilder: (context, animation, secondaryAnimation) {
+                      return const EditProfile();
+                    },
+                    opaque: false,
+                  ),
+                );
+              },
+              child: const Center(child: Icon(Icons.edit, color: Colors.white)),
             )
-          ])),
-          titleSpacing: 10,
-          leading: const SizedBox(),
-          leadingWidth: 0,
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: const LinearGradient(
-                        colors: [Colors.orange, Colors.pink, Colors.red],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        stops: [0, 0.5, 0.7]),
-                  ),
-                  padding: const EdgeInsets.all(4),
-                  child: const Icon(
-                    CupertinoIcons.down_arrow,
-                    color: Colors.white,
-                  ),
-                ))
-          ],
-          // backgroundColor: const Color.fromARGB(113, 107, 102, 107),
-          // backgroundColor: Color(0xFF23272A),
-          backgroundColor: Colors.black,
-        ),
-        SliverToBoxAdapter(
-          child: Hero(
-            tag: keytag,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
+          : const SizedBox(),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            surfaceTintColor: Colors.transparent,
+            title: RichText(
+                text: TextSpan(children: [
+              TextSpan(
+                text: profiledetail.username,
+                style: const TextStyle(
+                  fontSize: 25,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const TextSpan(text: ", ", style: TextStyle(fontSize: 30)),
+              const TextSpan(
+                text: "20",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              )
+            ])),
+            titleSpacing: 10,
+            leading: const SizedBox(),
+            leadingWidth: 0,
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: const LinearGradient(
+                          colors: [Colors.orange, Colors.pink, Colors.red],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          stops: [0, 0.5, 0.7]),
+                    ),
+                    padding: const EdgeInsets.all(4),
+                    child: const Icon(
+                      CupertinoIcons.down_arrow,
+                      color: Colors.white,
+                    ),
+                  ))
+            ],
+            // backgroundColor: const Color.fromARGB(113, 107, 102, 107),
+            // backgroundColor: Color(0xFF23272A),
+            backgroundColor: Colors.black,
+          ),
+          SliverToBoxAdapter(
+            child: Hero(
+              tag: keytag,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(14),
                   bottomRight: Radius.circular(14),
                   topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10)),
-              child: CachedNetworkImage(
-                imageUrl: profiledetail.profileimage ?? "",
-                placeholder: (context, url) {
-                  return const Center(
-                    child: Icon(Icons.local_dining),
-                  );
-                },
-                errorWidget: (context, url, error) {
-                  return const Center(
-                    child: Icon(
-                      Icons.error,
-                      color: Colors.red,
-                      size: 30,
-                    ),
-                  );
-                },
-                height: size.height - 400,
-                width: size.width,
-                fit: BoxFit.cover,
+                  topRight: Radius.circular(10),
+                ),
+                // child: CachedNetworkImage(
+                //   imageUrl: profiledetail.profileimage ?? "",
+                //   placeholder: (context, url) {
+                //     return const Center(
+                //       child: Icon(Icons.local_dining),
+                //     );
+                //   },
+                //   errorWidget: (context, url, error) {
+                //     return const Center(
+                //       child: Icon(
+                //         Icons.error,
+                //         color: Colors.red,
+                //         size: 30,
+                //       ),
+                //     );
+                //   },
+                //   height: size.height - 400,
+                //   width: size.width,
+                //   fit: BoxFit.cover,
+                // ),
               ),
             ),
           ),
-        ),
-        SliverList.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return buildList(
+          // SliverList.builder(
+          //   itemCount: 10,
+          //   itemBuilder: (context, index) {
+          //     return buildList(
+          //       icon: CupertinoIcons.search,
+          //       title: "Looking for",
+          //       desc: "❤️ Short time fun",
+          //     );
+          //   },
+          // ),
+          SliverToBoxAdapter(
+            child: buildList(
               icon: CupertinoIcons.search,
               title: "Looking for",
-              desc: "❤️ Short time fun",
-            );
-          },
-        )
-      ]),
+              desc: profiledetail.relationshipGoal,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: buildList(
+              icon: CupertinoIcons.tray_full,
+              title: "Basics",
+              listitem: profiledetail.toJson(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget buildList(
       {required IconData icon,
-      List<Map<String, String>>? listitem,
+      Map<String, dynamic>? listitem,
       String? desc,
       required String title}) {
     if (desc != null) {
@@ -167,6 +221,7 @@ class _ProfileDetailScreen extends State<ProfileDetailScreen> {
       );
     }
     if (listitem != null) {
+      print(listitem["askMeAbout"]);
       return Container(
         margin: const EdgeInsets.only(top: 10, left: 8, right: 8),
         padding: const EdgeInsets.all(15),

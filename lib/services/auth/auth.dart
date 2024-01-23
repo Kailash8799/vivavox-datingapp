@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthUser {
   final String _baseUrl = "https://vivavox-backend.vercel.app";
@@ -64,6 +65,16 @@ class AuthUser {
       Map<String, dynamic> data =
           jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
       return data;
+    } catch (e) {
+      return {"success": false, "message": "Some error occurred!"};
+    }
+  }
+
+  Future<Map<String, dynamic>> logOut() async {
+    try {
+      final SharedPreferences status = await SharedPreferences.getInstance();
+      await status.remove("auth_token");
+      return {"success": true, "message": "Logout"};
     } catch (e) {
       return {"success": false, "message": "Some error occurred!"};
     }

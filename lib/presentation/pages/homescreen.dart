@@ -59,8 +59,22 @@ class _HomeScreenState extends State<HomeScreen> {
             child: _index == 0
                 ? IconButton(
                     onPressed: () {
-                      Navigator.of(context).push(NoAnimationTransition(
-                          builder: (context) => const LoginScreen()));
+                      // Navigator.of(context).push(PageRouteBuilder(
+                      //   pageBuilder: (context, animation, secondaryAnimation) {
+                      //     return const PageWaveTransaction(
+                      //         screenroute: LoginScreen());
+                      //   },
+                      //   opaque: false,
+                      // ));
+                      Navigator.of(context).push(
+                        AnimationTransition(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) {
+                            return const LoginScreen();
+                          },
+                          opaque: false,
+                        ),
+                      );
                     },
                     icon: const Icon(
                       CupertinoIcons.bell_solid,
