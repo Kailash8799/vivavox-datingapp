@@ -100,10 +100,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
       await Future.delayed(const Duration(seconds: 1));
       if (!context.mounted) return;
-      SnakbarComp.showSnackBar(context, "Login In");
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (context) {
+        AnimationTransition(
+          opaque: false,
+          pageBuilder: (context, animation, secondaryAnimation) {
             return const HomeScreen();
           },
         ),
@@ -342,11 +342,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       top: 5, left: 20, right: 20, bottom: 10),
                   child: InkWell(
                     onTap: () {
-                      Navigator.of(context).push(CupertinoModalPopupRoute(
-                        builder: (context) {
-                          return const ForgotPasswordScreen();
-                        },
-                      ));
+                      Navigator.of(context).push(
+                        AnimationTransition(
+                          opaque: false,
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) {
+                            return const ForgotPasswordScreen();
+                          },
+                        ),
+                      );
                     },
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.end,

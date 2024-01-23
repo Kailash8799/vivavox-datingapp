@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vivavox/presentation/pages/loginscreen.dart';
+import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 import 'package:vivavox/presentation/widgets/snakbar.dart';
 import 'package:vivavox/services/auth/auth.dart';
 
@@ -47,8 +48,9 @@ class _CreateaccountscreenState extends State<Createaccountscreen> {
             responce["message"],
           );
           Navigator.of(context).pushReplacement(
-            CupertinoModalPopupRoute(
-              builder: (context) {
+            AnimationTransition(
+              opaque: false,
+              pageBuilder: (context, animation, secondaryAnimation) {
                 return const LoginScreen();
               },
             ),

@@ -1,4 +1,4 @@
-// import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,14 +8,14 @@ import 'package:vivavox/presentation/providers/profileprovider.dart';
 import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 import 'package:vivavox/services/model/profileinfo.dart';
 
-class ProfileDetailScreen extends StatefulWidget {
-  const ProfileDetailScreen({super.key});
+class UserProfileDetailScreen extends StatefulWidget {
+  const UserProfileDetailScreen({super.key});
 
   @override
-  State<ProfileDetailScreen> createState() => _ProfileDetailScreen();
+  State<UserProfileDetailScreen> createState() => _UserProfileDetailScreen();
 }
 
-class _ProfileDetailScreen extends State<ProfileDetailScreen> {
+class _UserProfileDetailScreen extends State<UserProfileDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ProfileProvider>(context, listen: false);
@@ -43,8 +43,8 @@ class _ProfileDetailScreen extends State<ProfileDetailScreen> {
                 shape: RoundedRectangleBorder(
                     side: const BorderSide(width: 1),
                     borderRadius: BorderRadius.circular(15)),
-                maximumSize: const Size(70, 60),
-                minimumSize: const Size(70, 60),
+                maximumSize: const Size(65, 60),
+                minimumSize: const Size(65, 60),
                 backgroundColor: const Color(0xFFFE3C72),
               ),
               onPressed: () {
@@ -57,7 +57,12 @@ class _ProfileDetailScreen extends State<ProfileDetailScreen> {
                   ),
                 );
               },
-              child: const Center(child: Icon(Icons.edit, color: Colors.white)),
+              child: const Center(
+                  child: Icon(
+                Icons.edit,
+                color: Colors.white,
+                size: 26,
+              )),
             )
           : const SizedBox(),
       body: CustomScrollView(
@@ -119,26 +124,26 @@ class _ProfileDetailScreen extends State<ProfileDetailScreen> {
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
                 ),
-                // child: CachedNetworkImage(
-                //   imageUrl: profiledetail.profileimage ?? "",
-                //   placeholder: (context, url) {
-                //     return const Center(
-                //       child: Icon(Icons.local_dining),
-                //     );
-                //   },
-                //   errorWidget: (context, url, error) {
-                //     return const Center(
-                //       child: Icon(
-                //         Icons.error,
-                //         color: Colors.red,
-                //         size: 30,
-                //       ),
-                //     );
-                //   },
-                //   height: size.height - 400,
-                //   width: size.width,
-                //   fit: BoxFit.cover,
-                // ),
+                child: CachedNetworkImage(
+                  imageUrl: profiledetail.profileimage ?? "",
+                  placeholder: (context, url) {
+                    return const Center(
+                      child: Icon(Icons.local_dining),
+                    );
+                  },
+                  errorWidget: (context, url, error) {
+                    return const Center(
+                      child: Icon(
+                        Icons.error,
+                        color: Colors.red,
+                        size: 30,
+                      ),
+                    );
+                  },
+                  height: size.height - 400,
+                  width: size.width,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
@@ -251,20 +256,43 @@ class _ProfileDetailScreen extends State<ProfileDetailScreen> {
               ],
             ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          const Text(
-            "❤️ Short time fun",
-            style: TextStyle(
-              fontSize: 25,
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-            ),
-          )
+          // listitem["askMeAbout"].values.forEach((v) => {buildListInside()})
+          buildListInside(),
+          buildListInside(),
+          buildListInside(),
         ]),
       );
     }
     return const SizedBox();
+  }
+
+  Widget buildListInside() {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          "❤️ Short time fun",
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Text(
+          "❤️ Short time fun",
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.white,
+            fontWeight: FontWeight.w300,
+          ),
+        )
+      ],
+    );
   }
 }

@@ -5,6 +5,7 @@ import 'package:vivavox/presentation/pages/homescreen.dart';
 import 'package:vivavox/presentation/pages/splashscreen.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
+import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 import 'package:vivavox/services/auth/auth.dart';
 import 'package:vivavox/services/model/profileinfo.dart';
 
@@ -18,17 +19,23 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   void transferScreen({required bool isLogin}) {
     if (isLogin) {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-        builder: (context) {
-          return const HomeScreen();
-        },
-      ), (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          AnimationTransition(
+            opaque: false,
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return const HomeScreen();
+            },
+          ),
+          (route) => false);
     } else {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-        builder: (context) {
-          return const Splashscreen();
-        },
-      ), (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          AnimationTransition(
+            opaque: false,
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return const Splashscreen();
+            },
+          ),
+          (route) => false);
     }
   }
 

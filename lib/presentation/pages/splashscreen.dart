@@ -27,8 +27,9 @@ class _SplashscreenState extends State<Splashscreen> {
   late TapGestureRecognizer _termsConditionRecognizer;
 
   void gotoTermandConditions() {
-    Navigator.of(context).push(CupertinoModalPopupRoute(
-      builder: (context) {
+    Navigator.of(context).push(AnimationTransition(
+      opaque: false,
+      pageBuilder: (context, animation, secondaryAnimation) {
         return const Termandcondition();
       },
     ));

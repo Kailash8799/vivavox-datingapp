@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:vivavox/presentation/pages/profiledetailscreen.dart';
+import 'package:vivavox/presentation/pages/userprofiledetails.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
 import 'package:vivavox/services/model/profileinfo.dart';
 
@@ -232,7 +232,7 @@ class _VivavoxCardState extends State<VivavoxCard> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return const ProfileDetailScreen();
+                            return const UserProfileDetailScreen();
                           },
                           settings: RouteSettings(arguments: {
                             "profile": widget.profile,

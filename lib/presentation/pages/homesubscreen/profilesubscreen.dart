@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:vivavox/presentation/pages/profiledetailscreen.dart';
 import 'package:vivavox/presentation/pages/splashscreen.dart';
+import 'package:vivavox/presentation/pages/userprofiledetails.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
 import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 import 'package:vivavox/services/auth/auth.dart';
@@ -20,7 +20,7 @@ class ProfilesubScreen extends StatefulWidget {
 class _ProfilesubScreenState extends State<ProfilesubScreen> {
   // DocumentSnapshot? user;
   final String _profileImage =
-      "https://media.licdn.com/dms/image/D4D03AQGvVI0pimv4xA/profile-displayphoto-shrink_400_400/0/1671282782735?e=1698883200&v=beta&t=G-A7sfrDL76Mmk8YpZ9d-DHyJFyJ2QOzdY_Bi53ypjI";
+      "https://avatars.githubusercontent.com/u/98249911?s=400&u=d567c4ef70777250a8315f745ffe2b60e3b55537&v=4";
 
   @override
   void initState() {
@@ -95,7 +95,7 @@ class _ProfilesubScreenState extends State<ProfilesubScreen> {
                               AnimationTransition(
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) {
-                                  return const ProfileDetailScreen();
+                                  return const UserProfileDetailScreen();
                                 },
                                 opaque: false,
                                 settings: RouteSettings(
