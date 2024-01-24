@@ -123,20 +123,27 @@ class AuthUser {
       {required String email,
       required Map<String, dynamic> profiledata}) async {
     try {
+      // print(profiledata);
+      final profiled = jsonEncode(<String, dynamic>{
+        'email': email,
+        'profile': profiledata,
+      });
+      print(profiled);
       final res = await http.post(
         Uri.parse("$_baseUrl/v1/users/editprofile"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{
+        body: jsonEncode(<String, dynamic>{
           'email': email,
-          'profile': jsonEncode({profiledata}),
+          'profile': profiledata,
         }),
       );
       Map<String, dynamic> data =
           jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
       return data;
     } catch (e) {
+      print(e);
       return {"success": false, "message": "Some error occurred!"};
     }
   }

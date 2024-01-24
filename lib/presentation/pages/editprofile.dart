@@ -47,18 +47,23 @@ class _EditProfileState extends State<EditProfile> {
       final provider = Provider.of<ProfileProvider>(context, listen: false);
       final provider2 = Provider.of<CardProvider>(context, listen: false);
       if (provider.profile != null) {
-        String? about =
-            _aboutController.text.isEmpty ? _aboutController.text : null;
-        String? jobTitle =
-            _jobTitleController.text.isEmpty ? _jobTitleController.text : null;
-        String? company =
-            _companyController.text.isEmpty ? _companyController.text : null;
-        String? college =
-            _collegeController.text.isEmpty ? _collegeController.text : null;
-        String? livingin =
-            _livinginController.text.isEmpty ? _livinginController.text : null;
-        String? instagram = _instagramController.text.isEmpty
-            ? _instagramController.text
+        String? about = _aboutController.text.isNotEmpty
+            ? _aboutController.text.trim()
+            : null;
+        String? jobTitle = _jobTitleController.text.isNotEmpty
+            ? _jobTitleController.text.trim()
+            : null;
+        String? company = _companyController.text.isNotEmpty
+            ? _companyController.text.trim()
+            : null;
+        String? college = _collegeController.text.isNotEmpty
+            ? _collegeController.text.trim()
+            : null;
+        String? livingin = _livinginController.text.isNotEmpty
+            ? _livinginController.text.trim()
+            : null;
+        String? instagram = _instagramController.text.isNotEmpty
+            ? _instagramController.text.trim()
             : null;
         Map<String, dynamic> profile = provider.getUpdatedProfile(
           about: about,
@@ -74,7 +79,9 @@ class _EditProfileState extends State<EditProfile> {
               .updateProfile(email: provider2.email, profiledata: data);
           if (res["success"]) {
             print(res);
-          } else {}
+          } else {
+            print(res);
+          }
         } else {}
       }
     });

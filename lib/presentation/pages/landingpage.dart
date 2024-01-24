@@ -40,24 +40,30 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   void getStatus() async {
-    final SharedPreferences status = await SharedPreferences.getInstance();
-    final String? token = status.getString("auth_token");
-    if (token == null) {
-      transferScreen(isLogin: false);
-      return;
-    }
-    AuthUser user = AuthUser();
-    Map<String, dynamic> responce = await user.getProfile(token: token);
-    if (responce["success"] == true) {
-      if (!context.mounted) return;
-      final provider = Provider.of<ProfileProvider>(context, listen: false);
-      final cardprovider = Provider.of<CardProvider>(context, listen: false);
-      provider.addProfile(
-          profileinfo: Profileinfo.fromJson(responce["profile"]));
-      cardprovider.setMail(email: responce["profile"]["email"] as String);
-      cardprovider.initialize();
-      transferScreen(isLogin: true);
-    } else {
+    try {
+      final SharedPreferences status = await SharedPreferences.getInstance();
+      final String? token = status.getString("auth_token");
+      if (token == null) {
+        transferScreen(isLogin: false);
+        return;
+      }
+      AuthUser user = AuthUser();
+      Map<String, dynamic> responce = await user.getProfile(token: token);
+      if (responce["success"] == true) {
+        if (!context.mounted) return;
+        final provider = Provider.of<ProfileProvider>(context, listen: false);
+        final cardprovider = Provider.of<CardProvider>(context, listen: false);
+        provider.addProfile(
+            profileinfo: Profileinfo.fromJson(responce["profile"]));
+        cardprovider.setMail(email: responce["profile"]["email"] as String);
+        cardprovider.initialize();
+        transferScreen(isLogin: true);
+      } else {
+        await status.remove("auth_token");
+        transferScreen(isLogin: false);
+      }
+    } catch (e) {
+      final SharedPreferences status = await SharedPreferences.getInstance();
       await status.remove("auth_token");
       transferScreen(isLogin: false);
     }

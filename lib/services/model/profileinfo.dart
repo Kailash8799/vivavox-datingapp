@@ -94,7 +94,7 @@ class Profileinfo {
       sexualOrientation: json["sexualOrientation"] == null
           ? null
           : json["sexualOrientation"] as String,
-      askMeAbout: About.fromJson(json["location"]),
+      askMeAbout: About.fromJson(json["askMeAbout"]),
       basics: Basics.fromJson(json["basics"]),
       lifeStyle: Lifestyle.fromJson(json['lifeStyle']),
       premiumuser: json["premiumuser"] as bool,
