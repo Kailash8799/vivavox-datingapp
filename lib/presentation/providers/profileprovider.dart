@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:vivavox/services/model/profileinfo.dart';
 
@@ -15,6 +17,7 @@ class ProfileProvider extends ChangeNotifier {
   Lifestyle? _lifeStyle;
   About? _askMeAbout;
   String? _sexualOrientation;
+  bool _profileUpdating = false;
 
   String? get gender => _gender;
   String? get location => _location;
@@ -28,12 +31,12 @@ class ProfileProvider extends ChangeNotifier {
   Lifestyle? get lifeStyle => _lifeStyle;
   About? get askMeAbout => _askMeAbout;
   String? get sexualOrientation => _sexualOrientation;
+  bool get profileupdating => _profileUpdating;
 
   Profileinfo? get profile => _profileinfo;
 
-  void addGender({required Profileinfo profileinfo}) {
+  void addProfile({required Profileinfo profileinfo}) {
     _profileinfo = profileinfo;
-    // _profileinfo?.aboutme = profileinfo.aboutme;
     _gender = profileinfo.gender;
     _location = profileinfo.location;
     _interest = profileinfo.interest;
@@ -49,8 +52,13 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addProfile({required Profileinfo profileinfo}) {
-    _profileinfo = profileinfo;
+  void addGender({required String? value, required bool isSelected}) {
+    print(value);
+    if (isSelected) {
+      _gender = null;
+    } else {
+      _gender = value;
+    }
     notifyListeners();
   }
 
@@ -104,6 +112,11 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setUpdatingValue(bool val) {
+    _profileUpdating = val;
+    notifyListeners();
+  }
+
   Map<String, dynamic> getUpdatedProfile({
     String? about,
     String? jobTitle,
@@ -113,7 +126,6 @@ class ProfileProvider extends ChangeNotifier {
     String? instagramId,
   }) {
     if (_profileinfo == null) {
-      // print(_profileinfo);
       return {"success": false};
     }
     Profileinfo updateProfile = Profileinfo(

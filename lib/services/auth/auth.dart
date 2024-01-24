@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -114,7 +114,7 @@ class AuthUser {
           jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
       return data;
     } catch (e) {
-      print(e);
+      debugPrint('$e');
       return {"success": false, "message": "Some error occurred!"};
     }
   }
@@ -123,12 +123,6 @@ class AuthUser {
       {required String email,
       required Map<String, dynamic> profiledata}) async {
     try {
-      // print(profiledata);
-      final profiled = jsonEncode(<String, dynamic>{
-        'email': email,
-        'profile': profiledata,
-      });
-      print(profiled);
       final res = await http.post(
         Uri.parse("$_baseUrl/v1/users/editprofile"),
         headers: <String, String>{
@@ -143,7 +137,7 @@ class AuthUser {
           jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
       return data;
     } catch (e) {
-      print(e);
+      debugPrint('$e');
       return {"success": false, "message": "Some error occurred!"};
     }
   }

@@ -226,7 +226,6 @@ class _UserProfileDetailScreen extends State<UserProfileDetailScreen> {
       );
     }
     if (listitem != null) {
-      print(listitem["askMeAbout"]);
       return Container(
         margin: const EdgeInsets.only(top: 10, left: 8, right: 8),
         padding: const EdgeInsets.all(15),

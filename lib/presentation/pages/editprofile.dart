@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
 import 'package:vivavox/services/auth/auth.dart';
+import 'package:vivavox/services/model/profileinfo.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -46,50 +47,57 @@ class _EditProfileState extends State<EditProfile> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final provider = Provider.of<ProfileProvider>(context, listen: false);
       final provider2 = Provider.of<CardProvider>(context, listen: false);
-      if (provider.profile != null) {
-        String? about = _aboutController.text.isNotEmpty
-            ? _aboutController.text.trim()
-            : null;
-        String? jobTitle = _jobTitleController.text.isNotEmpty
-            ? _jobTitleController.text.trim()
-            : null;
-        String? company = _companyController.text.isNotEmpty
-            ? _companyController.text.trim()
-            : null;
-        String? college = _collegeController.text.isNotEmpty
-            ? _collegeController.text.trim()
-            : null;
-        String? livingin = _livinginController.text.isNotEmpty
-            ? _livinginController.text.trim()
-            : null;
-        String? instagram = _instagramController.text.isNotEmpty
-            ? _instagramController.text.trim()
-            : null;
-        Map<String, dynamic> profile = provider.getUpdatedProfile(
-          about: about,
-          collegeName: college,
-          companyName: company,
-          instagramId: instagram,
-          jobTitle: jobTitle,
-          livingIn: livingin,
-        );
-        if (profile["success"]) {
-          Map<String, dynamic> data = profile["profiledata"];
-          Map<String, dynamic> res = await AuthUser()
-              .updateProfile(email: provider2.email, profiledata: data);
-          if (res["success"]) {
-            print(res);
-          } else {
-            print(res);
-          }
-        } else {}
+      if (provider.profileupdating) return;
+      provider.setUpdatingValue(true);
+      try {
+        if (provider.profile != null) {
+          String? about = _aboutController.text.isNotEmpty
+              ? _aboutController.text.trim()
+              : null;
+          String? jobTitle = _jobTitleController.text.isNotEmpty
+              ? _jobTitleController.text.trim()
+              : null;
+          String? company = _companyController.text.isNotEmpty
+              ? _companyController.text.trim()
+              : null;
+          String? college = _collegeController.text.isNotEmpty
+              ? _collegeController.text.trim()
+              : null;
+          String? livingin = _livinginController.text.isNotEmpty
+              ? _livinginController.text.trim()
+              : null;
+          String? instagram = _instagramController.text.isNotEmpty
+              ? _instagramController.text.trim()
+              : null;
+          Map<String, dynamic> profile = provider.getUpdatedProfile(
+            about: about,
+            collegeName: college,
+            companyName: company,
+            instagramId: instagram,
+            jobTitle: jobTitle,
+            livingIn: livingin,
+          );
+          if (profile["success"]) {
+            Map<String, dynamic> data = profile["profiledata"];
+            Map<String, dynamic> res = await AuthUser()
+                .updateProfile(email: provider2.email, profiledata: data);
+            if (res["success"]) {
+              provider.addProfile(
+                  profileinfo: Profileinfo.fromJson(res["profile"]));
+            } else {
+              debugPrint('$res');
+            }
+          } else {}
+        }
+      } catch (e) {
+        debugPrint(e.toString());
       }
+      provider.setUpdatingValue(false);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // final provider2 = Provider.of<CardProvider>(context,listen: false);
     final provider = Provider.of<ProfileProvider>(context);
     if (provider.profile == null) {
       Navigator.of(context).pop();
@@ -113,24 +121,42 @@ class _EditProfileState extends State<EditProfile> {
         leading: const SizedBox(),
         leadingWidth: 0,
         actions: [
-          IconButton(
-            onPressed: updateProfile,
-            icon: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: const LinearGradient(
-                    colors: [Colors.orange, Colors.pink, Colors.red],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: [0, 0.5, 0.7]),
-              ),
-              padding: const EdgeInsets.all(4),
-              child: const Icon(
-                Icons.save,
-                color: Colors.white,
-              ),
-            ),
-          ),
+          provider.profileupdating
+              ? Container(
+                  height: 35,
+                  width: 35,
+                  margin: const EdgeInsets.only(right: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: const LinearGradient(
+                        colors: [Colors.orange, Colors.pink, Colors.red],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        stops: [0, 0.5, 0.7]),
+                  ),
+                  padding: const EdgeInsets.all(4),
+                  child: const CupertinoActivityIndicator(
+                    color: Colors.white,
+                  ),
+                )
+              : IconButton(
+                  onPressed: updateProfile,
+                  icon: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: const LinearGradient(
+                          colors: [Colors.orange, Colors.pink, Colors.red],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          stops: [0, 0.5, 0.7]),
+                    ),
+                    padding: const EdgeInsets.all(4),
+                    child: const Icon(
+                      Icons.save,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
           IconButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -201,7 +227,9 @@ class _EditProfileState extends State<EditProfile> {
               padding: const EdgeInsets.symmetric(horizontal: 5),
               child: TextFormField(
                 controller: _aboutController
-                  ..text = provider.profile!.aboutme ?? "",
+                  ..text = _aboutController.text.isEmpty
+                      ? provider.profile!.aboutme ?? ""
+                      : _aboutController.text,
                 maxLines: 4,
                 maxLength: 300,
                 style: const TextStyle(color: Colors.white),
@@ -223,43 +251,96 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
             buildMainCategory(
-              icon: CupertinoIcons.add,
-              subcategoryname: "Select interest",
-              title: "Interests",
-              modalContent: Text("data"),
-            ),
+                icon: CupertinoIcons.add,
+                height: 300,
+                subcategoryname: "Select interest",
+                title: "Interests",
+                modalContent: Container(
+                  child: Text("data"),
+                )),
             buildMainCategory(
               icon: CupertinoIcons.eye,
+              height: 200,
               subcategoryname: "Looking for",
               title: "Relationship Goals",
               modalContent: Text("data"),
             ),
             buildMainCategory(
               icon: CupertinoIcons.tag,
+              height: 120,
               subcategoryname: "Add height",
               title: "Height",
               modalContent: Text("data"),
             ),
             buildMainCategory(
               icon: CupertinoIcons.eye,
+              height: 340,
               subcategoryname: "Open to...",
               title: "Relationship Type",
               modalContent: Text("data"),
             ),
             buildMainCategory(
               icon: Icons.language,
+              height: 300,
               subcategoryname: "Open to...",
               title: "Add languages",
               modalContent: Text("data"),
             ),
             buildMainCategory(
-              icon: Icons.language,
-              subcategoryname: "I am ...",
+              icon: Icons.boy,
+              height: 230,
+              subcategoryname: "I Am ${provider.gender ?? "..."}",
               title: "Gender",
-              modalContent: Text("data"),
+              modalContent: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 15),
+                      child: Consumer<ProfileProvider>(
+                        builder: (context, value, child) {
+                          return Text(
+                            "I Am ${value.gender ?? "..."}",
+                            style: const TextStyle(
+                              fontSize: 22,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
+                      )),
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 30, 32, 34),
+                    ),
+                    child: Consumer<ProfileProvider>(
+                      builder: (context, value, child) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildGenderSelect(gender: "Men"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildGenderSelect(gender: "Women"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildGenderSelect(gender: "Other"),
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
             buildMainCategory(
               icon: Icons.language,
+              height: 200,
               subcategoryname: "Add sexual Orintation",
               title: "Sexual Orientation",
               modalContent: Text("data"),
@@ -461,31 +542,41 @@ class _EditProfileState extends State<EditProfile> {
               title: "Job Title",
               hintText: "Add job title",
               controller: _jobTitleController
-                ..text = provider.profile!.jobTitle ?? "",
+                ..text = _jobTitleController.text.isEmpty
+                    ? provider.profile!.jobTitle ?? ""
+                    : _jobTitleController.text,
             ),
             buildInfoInput(
               title: "Company",
               hintText: "Add company",
               controller: _companyController
-                ..text = provider.profile!.companyName ?? "",
+                ..text = _companyController.text.isEmpty
+                    ? provider.profile!.companyName ?? ""
+                    : _companyController.text,
             ),
             buildInfoInput(
               title: "College",
               hintText: "Add college",
               controller: _collegeController
-                ..text = provider.profile!.collageName ?? "",
+                ..text = _collegeController.text.isEmpty
+                    ? provider.profile!.collageName ?? ""
+                    : _collegeController.text,
             ),
             buildInfoInput(
               title: "Living in",
               hintText: "Add city",
               controller: _livinginController
-                ..text = provider.profile!.liviningIn ?? "",
+                ..text = _livinginController.text.isEmpty
+                    ? provider.profile!.liviningIn ?? ""
+                    : _livinginController.text,
             ),
             buildInfoInput(
               title: "Instagram",
               hintText: "Add instagram username",
               controller: _instagramController
-                ..text = provider.profile!.instagranId ?? "",
+                ..text = _instagramController.text.isEmpty
+                    ? provider.profile!.instagranId ?? ""
+                    : _instagramController.text,
             ),
           ],
         ),
@@ -645,11 +736,13 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget buildMainCategory(
-      {required IconData icon,
-      required String subcategoryname,
-      required String title,
-      required Widget modalContent}) {
+  Widget buildMainCategory({
+    required IconData icon,
+    required String subcategoryname,
+    required String title,
+    required Widget modalContent,
+    required double height,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -667,7 +760,9 @@ class _EditProfileState extends State<EditProfile> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5),
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              bottomSheet(content: modalContent, height: height);
+            },
             child: Container(
               height: 50,
               width: double.infinity,
@@ -742,14 +837,18 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  void bottomSheet({required Widget content}) {
+  void bottomSheet({required Widget content, required double height}) {
     showModalBottomSheet(
+      showDragHandle: true,
+      backgroundColor: const Color.fromARGB(255, 30, 32, 34),
+      elevation: 0,
       context: context,
       builder: (context) {
         return Container(
-          color: Colors.pink,
-          height: 200,
+          color: const Color.fromARGB(255, 19, 21, 23),
           width: double.infinity,
+          height: height,
+          child: content,
         );
       },
     );
@@ -782,6 +881,40 @@ class _EditProfileState extends State<EditProfile> {
           );
         },
       ),
+    );
+  }
+
+  Widget buildGenderSelect({required String gender}) {
+    return Consumer<ProfileProvider>(
+      builder: (context, value, child) {
+        return InkWell(
+          onTap: () {
+            value.addGender(value: gender, isSelected: value.gender == gender);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 1, left: 4),
+                child: Text(
+                  gender,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              value.gender == gender
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 1, right: 10),
+                      child: const Icon(
+                        Icons.check,
+                        size: 20,
+                        color: Color(0xFFFE3C72),
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
+          ),
+        );
+      },
     );
   }
 }
