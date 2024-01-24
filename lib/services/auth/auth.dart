@@ -119,7 +119,9 @@ class AuthUser {
     }
   }
 
-  Future<Map<String, dynamic>> updateProfile({required String email}) async {
+  Future<Map<String, dynamic>> updateProfile(
+      {required String email,
+      required Map<String, dynamic> profiledata}) async {
     try {
       final res = await http.post(
         Uri.parse("$_baseUrl/v1/users/editprofile"),
@@ -128,6 +130,7 @@ class AuthUser {
         },
         body: jsonEncode(<String, String>{
           'email': email,
+          'profile': jsonEncode({profiledata}),
         }),
       );
       Map<String, dynamic> data =

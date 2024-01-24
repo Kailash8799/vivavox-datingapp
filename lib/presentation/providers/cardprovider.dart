@@ -6,7 +6,6 @@ import 'package:vivavox/services/model/profileinfo.dart';
 enum CardStatus { like, dislike, superlike }
 
 class CardProvider extends ChangeNotifier {
-  List<String> _assetImages = [];
   final List<Profileinfo> _profileDetails = [];
   String _email = "";
   int _profilefetchcount = 0;
@@ -18,7 +17,6 @@ class CardProvider extends ChangeNotifier {
   double _angle = 0;
   Offset _position = Offset.zero;
   Size _screenSize = Size.zero;
-  List<String> get assetImages => _assetImages;
   List<Profileinfo> get profileDetails => _profileDetails;
   bool get isDragging => _isDragging;
   bool get isProfilefetching => _profilefetching;
@@ -27,6 +25,7 @@ class CardProvider extends ChangeNotifier {
   bool get isSuperLike => _issuperLike;
   Offset get position => _position;
   double get angle => _angle;
+  String get email => _email;
   // CardProvider() {
   //   initialize();
   // }
