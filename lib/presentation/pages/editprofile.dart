@@ -20,6 +20,7 @@ class _EditProfileState extends State<EditProfile> {
   late TextEditingController _collegeController;
   late TextEditingController _livinginController;
   late TextEditingController _instagramController;
+  late TextEditingController _heightController;
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _EditProfileState extends State<EditProfile> {
     _collegeController = TextEditingController(text: "");
     _livinginController = TextEditingController(text: "");
     _instagramController = TextEditingController(text: "");
+    _heightController = TextEditingController(text: "");
   }
 
   @override
@@ -41,6 +43,7 @@ class _EditProfileState extends State<EditProfile> {
     _collegeController.dispose();
     _livinginController.dispose();
     _instagramController.dispose();
+    _heightController.dispose();
   }
 
   void updateProfile() {
@@ -251,40 +254,345 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
             buildMainCategory(
-                icon: CupertinoIcons.add,
-                height: 300,
-                subcategoryname: "Select interest",
-                title: "Interests",
-                modalContent: Container(
-                  child: Text("data"),
-                )),
+              icon: CupertinoIcons.add,
+              height: 610,
+              subcategoryname: provider.interest ?? "Select interest",
+              title: "Interests",
+              modalContent: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 15),
+                      child: Consumer<ProfileProvider>(
+                        builder: (context, value, child) {
+                          return Text(
+                            "I have interest in  ${value.interest ?? "..."}",
+                            style: const TextStyle(
+                              fontSize: 22,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
+                      )),
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 30, 32, 34),
+                    ),
+                    child: Consumer<ProfileProvider>(
+                      builder: (context, value, child) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildInterestSelect(interest: "Movie"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildInterestSelect(interest: "Shopping"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildInterestSelect(interest: "Cricket"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildInterestSelect(interest: "Gym"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildInterestSelect(interest: "Dancing"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildInterestSelect(interest: "Vlogging"),
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
             buildMainCategory(
               icon: CupertinoIcons.eye,
-              height: 200,
-              subcategoryname: "Looking for",
+              height: 400,
+              subcategoryname: provider.relationshipGoal ?? "Looking for...",
               title: "Relationship Goals",
-              modalContent: Text("data"),
+              modalContent: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      "Right now I'm looking for...",
+                      style: TextStyle(
+                        fontSize: 27,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Text(
+                      "Increase compatibility by sharing yours!",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    width: double.infinity,
+                    child: Consumer<ProfileProvider>(
+                      builder: (context, value, child) {
+                        return Wrap(
+                          alignment: WrapAlignment.center,
+                          runAlignment: WrapAlignment.start,
+                          verticalDirection: VerticalDirection.down,
+                          crossAxisAlignment: WrapCrossAlignment.start,
+                          direction: Axis.horizontal,
+                          runSpacing: 7,
+                          spacing: 7,
+                          children: [
+                            buildRelationShipGoalSelect(
+                                icon: "💘",
+                                type: "💘 Long-term parter",
+                                text: "Long-term parter"),
+                            buildRelationShipGoalSelect(
+                                icon: "😍",
+                                type: "😍 Long-term, open to short",
+                                text: "Long-term, open to short"),
+                            buildRelationShipGoalSelect(
+                                icon: "🍷",
+                                type: "🍷 Short-term open to long",
+                                text: "Short-term open to long"),
+                            buildRelationShipGoalSelect(
+                                icon: "🎉",
+                                type: "🎉 Short-term fun",
+                                text: "Short-term fun"),
+                            buildRelationShipGoalSelect(
+                                icon: "👋",
+                                type: "👋 New friends",
+                                text: "New friends"),
+                            buildRelationShipGoalSelect(
+                              icon: "🤔",
+                              type: "🤔 Still figuring it out",
+                              text: "Still figuring it out",
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
             buildMainCategory(
               icon: CupertinoIcons.tag,
-              height: 120,
-              subcategoryname: "Add height",
+              height: 420,
+              subcategoryname: provider.height == null
+                  ? "Add height"
+                  : "${provider.height} cm",
               title: "Height",
-              modalContent: Text("data"),
+              modalContent: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(left: 10, top: 2),
+                      child: Text(
+                        "Height",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 10, top: 2),
+                      child: Text(
+                        "Here's a chance to add height to your profile",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 17,
+                          wordSpacing: 0,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    Consumer<ProfileProvider>(
+                      builder: (context, value, child) {
+                        return Padding(
+                          padding:
+                              const EdgeInsets.only(left: 5, right: 5, top: 10),
+                          child: TextFormField(
+                            initialValue: value.height ?? "",
+                            maxLines: 1,
+                            onChanged: (res) {
+                              value.addHeight(
+                                  height: res, isSelected: res.isEmpty);
+                            },
+                            keyboardType: TextInputType.number,
+                            style: const TextStyle(color: Colors.white),
+                            cursorColor: const Color(0xFFFE3C72),
+                            decoration: const InputDecoration(
+                              fillColor: Color.fromARGB(255, 30, 32, 34),
+                              filled: true,
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              hintText: "Add height in cm",
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(7),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 15),
+                    Center(
+                      child: ElevatedButton(
+                          onPressed: () {
+                            provider.addHeight(height: "", isSelected: true);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            "Reset Height",
+                            style: TextStyle(color: Colors.white),
+                          )),
+                    ),
+                  ],
+                ),
+              ),
             ),
             buildMainCategory(
               icon: CupertinoIcons.eye,
               height: 340,
-              subcategoryname: "Open to...",
+              subcategoryname: provider.relationshipType ?? "Open to...",
               title: "Relationship Type",
-              modalContent: Text("data"),
+              modalContent: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 15),
+                      child: Consumer<ProfileProvider>(
+                        builder: (context, value, child) {
+                          return Text(
+                            "I Am ${value.relationshipType ?? "..."}",
+                            style: const TextStyle(
+                              fontSize: 22,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
+                      )),
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 30, 32, 34),
+                    ),
+                    child: Consumer<ProfileProvider>(
+                      builder: (context, value, child) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildRelationShipTypeSelect(type: "Monogamy"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildRelationShipTypeSelect(
+                                type: "Ethical non-monogamy"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildRelationShipTypeSelect(type: "Polyagamy"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildRelationShipTypeSelect(
+                                type: "Open to exploring"),
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
             buildMainCategory(
               icon: Icons.language,
               height: 300,
-              subcategoryname: "Open to...",
-              title: "Add languages",
-              modalContent: Text("data"),
+              subcategoryname: "Add languages",
+              title: "Languages I Know",
+              modalContent: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 15),
+                      child: Consumer<ProfileProvider>(
+                        builder: (context, value, child) {
+                          return Text(
+                            "Languages I Know ${value.language!.isNotEmpty ? value.language!.map((e) => e) : "..."}",
+                            style: const TextStyle(
+                              fontSize: 22,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
+                      )),
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 30, 32, 34),
+                    ),
+                    child: Consumer<ProfileProvider>(
+                      builder: (context, value, child) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildLanguageSelect(language: "English"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildLanguageSelect(language: "Hindi"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildLanguageSelect(language: "Gujrati"),
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
             buildMainCategory(
               icon: Icons.boy,
@@ -340,10 +648,92 @@ class _EditProfileState extends State<EditProfile> {
             ),
             buildMainCategory(
               icon: Icons.language,
-              height: 200,
-              subcategoryname: "Add sexual Orintation",
+              height: 500,
+              subcategoryname: provider.sexualOrientation == null
+                  ? "Add sexual Orintation"
+                  : "I am ${provider.sexualOrientation}",
               title: "Sexual Orientation",
-              modalContent: Text("data"),
+              modalContent: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 15),
+                      child: Consumer<ProfileProvider>(
+                        builder: (context, value, child) {
+                          return Text(
+                            "I Am ${value.sexualOrientation ?? "..."}",
+                            style: const TextStyle(
+                              fontSize: 22,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
+                      )),
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 30, 32, 34),
+                    ),
+                    child: Consumer<ProfileProvider>(
+                      builder: (context, value, child) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildSexualOrientationSelect(sex: "Straight"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildSexualOrientationSelect(sex: "Lesbian"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildSexualOrientationSelect(sex: "Gay"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildSexualOrientationSelect(sex: "Bisexual"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildSexualOrientationSelect(sex: "Asexual"),
+                            const SizedBox(height: 5),
+                            const Divider(
+                                color: Color.fromARGB(255, 66, 70, 75)),
+                            const SizedBox(height: 5),
+                            buildSexualOrientationSelect(sex: "Demisexual"),
+                            //   const SizedBox(height: 5),
+                            //   const Divider(
+                            //       color: Color.fromARGB(255, 66, 70, 75)),
+                            //   const SizedBox(height: 5),
+                            //   buildGenderSelect(gender: "Pansexual"),
+                            //   const SizedBox(height: 5),
+                            //   const Divider(
+                            //       color: Color.fromARGB(255, 66, 70, 75)),
+                            //   const SizedBox(height: 5),
+                            //   buildGenderSelect(gender: "Queer"),
+                            //   const SizedBox(height: 5),
+                            //   const Divider(
+                            //       color: Color.fromARGB(255, 66, 70, 75)),
+                            //   const SizedBox(height: 5),
+                            //   buildGenderSelect(gender: "Bicurios"),
+                            //   const SizedBox(height: 5),
+                            //   const Divider(
+                            //       color: Color.fromARGB(255, 66, 70, 75)),
+                            //   const SizedBox(height: 5),
+                            //   buildGenderSelect(gender: "Aromantic"),
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
             const Padding(
               padding: EdgeInsets.only(left: 5, top: 20, bottom: 5),
@@ -863,21 +1253,20 @@ class _EditProfileState extends State<EditProfile> {
   Widget buildSheet() {
     return makeDismissable(
       child: DraggableScrollableSheet(
-        shouldCloseOnMinExtent: true,
-        minChildSize: 0.5,
-        maxChildSize: 0.85,
+        minChildSize: 0.3,
+        maxChildSize: 0.95,
+        initialChildSize: 0.6,
         builder: (context, scrollController) {
           return Container(
-            color: Colors.red,
-            child: ListView.builder(
-              itemCount: 100,
-              controller: scrollController,
-              itemBuilder: (context, index) {
-                return Container(
-                  child: Text("Hello"),
-                );
-              },
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 19, 21, 23),
+              border: const Border(
+                  top: BorderSide(
+                      color: Color.fromARGB(255, 30, 32, 34), width: 35)),
+              borderRadius: BorderRadius.circular(20),
             ),
+            child: ListView(
+                controller: scrollController, children: [Text("data")]),
           );
         },
       ),
@@ -902,6 +1291,204 @@ class _EditProfileState extends State<EditProfile> {
                 ),
               ),
               value.gender == gender
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 1, right: 10),
+                      child: const Icon(
+                        Icons.check,
+                        size: 20,
+                        color: Color(0xFFFE3C72),
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildRelationShipTypeSelect({required String type}) {
+    return Consumer<ProfileProvider>(
+      builder: (context, value, child) {
+        return InkWell(
+          onTap: () {
+            value.addRelationshipType(
+                relationshipType: type,
+                isSelected: value.relationshipType == type);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 1, left: 4),
+                child: Text(
+                  type,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              value.relationshipType == type
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 1, right: 10),
+                      child: const Icon(
+                        Icons.check,
+                        size: 20,
+                        color: Color(0xFFFE3C72),
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildRelationShipGoalSelect(
+      {required String type, required String icon, required String text}) {
+    return Consumer<ProfileProvider>(
+      builder: (context, value, child) {
+        return Container(
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 30, 32, 34),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: value.relationshipGoal == type ? Colors.pink : Colors.grey,
+              width: value.relationshipGoal == type ? 1 : 0,
+            ),
+          ),
+          width: MediaQuery.of(context).size.width / 3.5,
+          height: 100,
+          child: InkWell(
+            onTap: () {
+              value.addRelationshipGoal(
+                  relationshipGoal: type,
+                  isSelected: value.relationshipGoal == type);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        icon,
+                        style: const TextStyle(fontSize: 30),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      text,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildLanguageSelect({required String language}) {
+    return Consumer<ProfileProvider>(
+      builder: (context, value, child) {
+        return InkWell(
+          onTap: () {
+            value.addLanguage(
+                language: language,
+                isSelected: value.language!.contains(language));
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 1, left: 4),
+                child: Text(
+                  language,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              value.language!.contains(language)
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 1, right: 10),
+                      child: const Icon(
+                        Icons.check,
+                        size: 20,
+                        color: Color(0xFFFE3C72),
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildInterestSelect({required String interest}) {
+    return Consumer<ProfileProvider>(
+      builder: (context, value, child) {
+        return InkWell(
+          onTap: () {
+            value.addInterest(
+                interest: interest, isSelected: value.interest == interest);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 1, left: 4),
+                child: Text(
+                  interest,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              value.interest == interest
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 1, right: 10),
+                      child: const Icon(
+                        Icons.check,
+                        size: 20,
+                        color: Color(0xFFFE3C72),
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildSexualOrientationSelect({required String sex}) {
+    return Consumer<ProfileProvider>(
+      builder: (context, value, child) {
+        return InkWell(
+          onTap: () {
+            value.addSexualOrientation(
+                sexualOrientation: sex,
+                isSelected: value.sexualOrientation == sex);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 1, left: 4),
+                child: Text(
+                  sex,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              value.sexualOrientation == sex
                   ? Container(
                       margin: const EdgeInsets.only(top: 1, right: 10),
                       child: const Icon(

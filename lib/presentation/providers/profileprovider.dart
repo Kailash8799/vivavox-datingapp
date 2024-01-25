@@ -53,7 +53,6 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   void addGender({required String? value, required bool isSelected}) {
-    print(value);
     if (isSelected) {
       _gender = null;
     } else {
@@ -62,28 +61,50 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addInterest({required String? interest}) {
-    _interest = interest;
+  void addInterest({required String? interest, required bool isSelected}) {
+    if (isSelected) {
+      _interest = null;
+    } else {
+      _interest = interest;
+    }
     notifyListeners();
   }
 
-  void addRelationshipGoal({required String? relationshipGoal}) {
-    _relationshipGoal = relationshipGoal;
+  void addRelationshipGoal(
+      {required String? relationshipGoal, required bool isSelected}) {
+    if (isSelected) {
+      _relationshipGoal = null;
+    } else {
+      _relationshipGoal = relationshipGoal;
+    }
     notifyListeners();
   }
 
-  void addHeight({required String? height}) {
-    _height = height;
+  void addHeight({required String? height, required bool isSelected}) {
+    if (isSelected) {
+      _height = null;
+    } else {
+      _height = height;
+    }
     notifyListeners();
   }
 
-  void addRelationshipType({required String? relationshipType}) {
-    _relationshipType = relationshipType;
+  void addRelationshipType(
+      {required String? relationshipType, required bool isSelected}) {
+    if (isSelected) {
+      _relationshipType = null;
+    } else {
+      _relationshipType = relationshipType;
+    }
     notifyListeners();
   }
 
-  void addLanguage({required List<String>? language}) {
-    _language = language ?? [];
+  void addLanguage({required String language, required bool isSelected}) {
+    if (isSelected) {
+      _language.remove(language);
+    } else {
+      _language.add(language);
+    }
     notifyListeners();
   }
 
@@ -107,8 +128,13 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addSexualOrientation({required String? sexualOrientation}) {
-    _sexualOrientation = sexualOrientation;
+  void addSexualOrientation(
+      {required String? sexualOrientation, required bool isSelected}) {
+    if (isSelected) {
+      _sexualOrientation = null;
+    } else {
+      _sexualOrientation = sexualOrientation;
+    }
     notifyListeners();
   }
 
