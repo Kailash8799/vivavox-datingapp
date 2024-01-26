@@ -13,11 +13,14 @@ class ProfileProvider extends ChangeNotifier {
   String? _relationshipType;
   List<String> _language = [];
   List<String> _images = [];
-  Basics? _basics;
-  Lifestyle? _lifeStyle;
-  About? _askMeAbout;
+  Basics? _basics = Basics.fromJson(null);
+  Lifestyle? _lifeStyle = Lifestyle.fromJson(null);
+  About? _askMeAbout = About.fromJson(null);
   String? _sexualOrientation;
   bool _profileUpdating = false;
+  Map<String, dynamic> _basicsMap = {};
+  Map<String, dynamic> _lifestyleMap = {};
+  Map<String, dynamic> _aboutMap = {};
 
   String? get gender => _gender;
   String? get location => _location;
@@ -32,6 +35,9 @@ class ProfileProvider extends ChangeNotifier {
   About? get askMeAbout => _askMeAbout;
   String? get sexualOrientation => _sexualOrientation;
   bool get profileupdating => _profileUpdating;
+  Map<String, dynamic> get basicsMap => _basicsMap;
+  Map<String, dynamic> get lifestyleMap => _lifestyleMap;
+  Map<String, dynamic> get aboutMap => _aboutMap;
 
   Profileinfo? get profile => _profileinfo;
 
@@ -41,6 +47,9 @@ class ProfileProvider extends ChangeNotifier {
     _location = profileinfo.location;
     _interest = profileinfo.interest;
     _askMeAbout = profileinfo.askMeAbout;
+    _basicsMap = profileinfo.basics!.toJson();
+    _aboutMap = profileinfo.askMeAbout!.toJson();
+    _lifestyleMap = profileinfo.lifeStyle!.toJson();
     _basics = profileinfo.basics;
     _relationshipGoal = profileinfo.relationshipGoal;
     _relationshipType = profileinfo.relationshipType;
@@ -57,6 +66,36 @@ class ProfileProvider extends ChangeNotifier {
       _gender = null;
     } else {
       _gender = value;
+    }
+    notifyListeners();
+  }
+
+  void setBasics(
+      {required String? item, required bool isSelected, required String key}) {
+    if (isSelected) {
+      _basicsMap[key] = null;
+    } else {
+      _basicsMap[key] = item;
+    }
+    notifyListeners();
+  }
+
+  void setLifeStyle(
+      {required String? item, required bool isSelected, required String key}) {
+    if (isSelected) {
+      _lifestyleMap[key] = null;
+    } else {
+      _lifestyleMap[key] = item;
+    }
+    notifyListeners();
+  }
+
+  void setAskMeAbout(
+      {required String? item, required bool isSelected, required String key}) {
+    if (isSelected) {
+      _aboutMap[key] = null;
+    } else {
+      _aboutMap[key] = item;
     }
     notifyListeners();
   }
@@ -160,8 +199,8 @@ class ProfileProvider extends ChangeNotifier {
       username: _profileinfo!.username,
       email: _profileinfo!.email,
       aboutme: about,
-      askMeAbout: _askMeAbout,
-      basics: _basics,
+      askMeAbout: About.fromJson(_aboutMap),
+      basics: Basics.fromJson(_basicsMap),
       birthdate: _profileinfo!.birthdate,
       collageName: collegeName,
       companyName: companyName,
@@ -172,7 +211,7 @@ class ProfileProvider extends ChangeNotifier {
       interest: _interest,
       jobTitle: jobTitle,
       language: _language,
-      lifeStyle: _lifeStyle,
+      lifeStyle: Lifestyle.fromJson(_lifestyleMap),
       liviningIn: livingIn,
       location: _profileinfo!.location,
       mobileno: _profileinfo!.mobileno,

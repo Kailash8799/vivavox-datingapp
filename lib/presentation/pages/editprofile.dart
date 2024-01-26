@@ -762,6 +762,7 @@ class _EditProfileState extends State<EditProfile> {
                       buildInsideSubCategory(
                         icon: CupertinoIcons.moon_stars,
                         subcategoryname: "Zodiac",
+                        subcategory: provider.basicsMap["zodiac"],
                       ),
                       const SizedBox(height: 25),
                       buildInsideSubCategory(
@@ -823,39 +824,39 @@ class _EditProfileState extends State<EditProfile> {
                   padding: const EdgeInsets.only(left: 10, right: 5),
                   child: Column(
                     children: [
-                      buildInsideSubCategory(
-                        icon: CupertinoIcons.moon_stars,
-                        subcategoryname: "Zodiac",
+                      buildLifeStyleCategory(
+                        icon: Icons.pets_outlined,
+                        subcategoryname: "Pets",
                       ),
                       const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.menu_book_sharp,
-                        subcategoryname: "Education",
+                      buildLifeStyleCategory(
+                        icon: Icons.blender_outlined,
+                        subcategoryname: "Drinking",
                       ),
                       const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.family_restroom,
-                        subcategoryname: "Family Plans",
+                      buildLifeStyleCategory(
+                        icon: Icons.smoking_rooms,
+                        subcategoryname: "Smoking",
                       ),
                       const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.medical_information,
-                        subcategoryname: "Covid Vaccine",
+                      buildLifeStyleCategory(
+                        icon: Icons.sports_gymnastics,
+                        subcategoryname: "Workout",
                       ),
                       const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.tips_and_updates_rounded,
-                        subcategoryname: "Personality Type",
+                      buildLifeStyleCategory(
+                        icon: Icons.local_pizza_outlined,
+                        subcategoryname: "Dietary Preference",
                       ),
                       const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.add_call,
-                        subcategoryname: "Communication style",
+                      buildLifeStyleCategory(
+                        icon: CupertinoIcons.at,
+                        subcategoryname: "Social Media",
                       ),
                       const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: CupertinoIcons.heart,
-                        subcategoryname: "Love style",
+                      buildLifeStyleCategory(
+                        icon: CupertinoIcons.bed_double,
+                        subcategoryname: "Sleeping Habits",
                       ),
                       const SizedBox(height: 10),
                     ],
@@ -887,39 +888,19 @@ class _EditProfileState extends State<EditProfile> {
                   padding: const EdgeInsets.only(left: 10, right: 5),
                   child: Column(
                     children: [
-                      buildInsideSubCategory(
-                        icon: CupertinoIcons.moon_stars,
-                        subcategoryname: "Zodiac",
+                      buildAskMeAboutCategory(
+                        icon: Icons.travel_explore,
+                        subcategoryname: "Going Out",
                       ),
                       const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.menu_book_sharp,
-                        subcategoryname: "Education",
+                      buildAskMeAboutCategory(
+                        icon: Icons.weekend_rounded,
+                        subcategoryname: "My Weekends",
                       ),
                       const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.family_restroom,
-                        subcategoryname: "Family Plans",
-                      ),
-                      const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.medical_information,
-                        subcategoryname: "Covid Vaccine",
-                      ),
-                      const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.tips_and_updates_rounded,
-                        subcategoryname: "Personality Type",
-                      ),
-                      const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.add_call,
-                        subcategoryname: "Communication style",
-                      ),
-                      const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: CupertinoIcons.heart,
-                        subcategoryname: "Love style",
+                      buildAskMeAboutCategory(
+                        icon: Icons.contact_phone_rounded,
+                        subcategoryname: "Me + My Phone",
                       ),
                       const SizedBox(height: 10),
                     ],
@@ -1064,7 +1045,143 @@ class _EditProfileState extends State<EditProfile> {
     String? subcategory,
   }) {
     return InkWell(
-      onTap: basicBottomSheet,
+      onTap: basicBottomSheetBasics,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  icon,
+                  size: 20,
+                  color: Colors.grey,
+                ),
+                const SizedBox(
+                  width: 14,
+                ),
+                Expanded(
+                  child: Text(
+                    subcategoryname,
+                    style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      color: Colors.grey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Text(
+                    textDirection: TextDirection.rtl,
+                    subcategory ?? "Empty",
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      color: Colors.grey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 14,
+                ),
+                const Icon(
+                  CupertinoIcons.forward,
+                  color: Colors.grey,
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildAskMeAboutCategory({
+    required IconData icon,
+    required String subcategoryname,
+    String? subcategory,
+  }) {
+    return InkWell(
+      onTap: basicBottomSheetAskMeAbout,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  icon,
+                  size: 20,
+                  color: Colors.grey,
+                ),
+                const SizedBox(
+                  width: 14,
+                ),
+                Expanded(
+                  child: Text(
+                    subcategoryname,
+                    style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      color: Colors.grey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Text(
+                    textDirection: TextDirection.rtl,
+                    subcategory ?? "Empty",
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      color: Colors.grey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 14,
+                ),
+                const Icon(
+                  CupertinoIcons.forward,
+                  color: Colors.grey,
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildLifeStyleCategory({
+    required IconData icon,
+    required String subcategoryname,
+    String? subcategory,
+  }) {
+    return InkWell(
+      onTap: basicBottomSheetLifeStyle,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -1213,7 +1330,7 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  void basicBottomSheet() {
+  void basicBottomSheetBasics() {
     showModalBottomSheet(
       isScrollControlled: true,
       barrierColor: Colors.transparent,
@@ -1222,7 +1339,35 @@ class _EditProfileState extends State<EditProfile> {
       elevation: 0,
       context: context,
       builder: (context) {
-        return buildSheet();
+        return buildSheetBasics();
+      },
+    );
+  }
+
+  void basicBottomSheetAskMeAbout() {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      barrierColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      useSafeArea: true,
+      elevation: 0,
+      context: context,
+      builder: (context) {
+        return buildSheetAboutme();
+      },
+    );
+  }
+
+  void basicBottomSheetLifeStyle() {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      barrierColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      useSafeArea: true,
+      elevation: 0,
+      context: context,
+      builder: (context) {
+        return buildSheetLifeStyle();
       },
     );
   }
@@ -1250,7 +1395,170 @@ class _EditProfileState extends State<EditProfile> {
         child: GestureDetector(onTap: () {}, child: child),
       );
 
-  Widget buildSheet() {
+  Widget buildSheetBasics() {
+    return makeDismissable(
+      child: DraggableScrollableSheet(
+        minChildSize: 0.3,
+        maxChildSize: 0.95,
+        initialChildSize: 0.6,
+        builder: (context, scrollController) {
+          return Container(
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 19, 21, 23),
+              border: const Border(
+                  top: BorderSide(
+                      color: Color.fromARGB(255, 30, 32, 34), width: 35)),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              controller: scrollController,
+              children: [
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     IconButton(
+                //         onPressed: () {
+                //           Navigator.of(context).pop();
+                //         },
+                //         icon: const Icon(
+                //           CupertinoIcons.multiply,
+                //           color: Colors.white,
+                //           size: 30,
+                //         )),
+                //     IconButton(
+                //         onPressed: () {},
+                //         icon: const Icon(
+                //           CupertinoIcons.check_mark,
+                //           color: Colors.white,
+                //           size: 30,
+                //         )),
+                //   ],
+                // ),
+                const SizedBox(
+                  child: Text(
+                    "Basics",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  child: Text(
+                    "Bring your best self forward by adding more about you",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.moon_stars,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    SizedBox(
+                      child: Text(
+                        "What is your zodiac sign?",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  children: [
+                    buildChip(title: "Capricorn", type: "zodiac"),
+                    buildChip(title: "Aquarius", type: "zodiac"),
+                    buildChip(title: "Pisces", type: "zodiac"),
+                    buildChip(title: "Aries", type: "zodiac"),
+                    buildChip(title: "Taurus", type: "zodiac"),
+                    buildChip(title: "Gemini", type: "zodiac"),
+                    buildChip(title: "Cancer", type: "zodiac"),
+                    buildChip(title: "Leo", type: "zodiac"),
+                    buildChip(title: "Virgo", type: "zodiac"),
+                    buildChip(title: "Libra", type: "zodiac"),
+                    buildChip(title: "Scorpio", type: "zodiac"),
+                    buildChip(title: "Sagittarius", type: "zodiac"),
+                  ],
+                ),
+                Container(),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget buildChip({required String title, required String type}) {
+    return Consumer<ProfileProvider>(
+      builder: (context, value, child) {
+        return InkWell(
+          onTap: () {
+            value.setBasics(
+              item: title,
+              isSelected: value.basicsMap[type] == title,
+              key: type,
+            );
+          },
+          child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Chip(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                    color: value.basicsMap[type] == title
+                        ? const Color(0xFFFE3C72)
+                        : Colors.grey,
+                  ),
+                ),
+                label: Text(
+                  title,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              )),
+        );
+      },
+    );
+  }
+
+  Widget buildSheetAboutme() {
+    return makeDismissable(
+      child: DraggableScrollableSheet(
+        minChildSize: 0.3,
+        maxChildSize: 0.95,
+        initialChildSize: 0.6,
+        builder: (context, scrollController) {
+          return Container(
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 19, 21, 23),
+              border: const Border(
+                  top: BorderSide(
+                      color: Color.fromARGB(255, 30, 32, 34), width: 35)),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: ListView(
+                controller: scrollController, children: [Text("data")]),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget buildSheetLifeStyle() {
     return makeDismissable(
       child: DraggableScrollableSheet(
         minChildSize: 0.3,
