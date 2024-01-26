@@ -768,31 +768,37 @@ class _EditProfileState extends State<EditProfile> {
                       buildInsideSubCategory(
                         icon: Icons.menu_book_sharp,
                         subcategoryname: "Education",
+                        subcategory: provider.basicsMap["eduction"],
                       ),
                       const SizedBox(height: 25),
                       buildInsideSubCategory(
                         icon: Icons.family_restroom,
                         subcategoryname: "Family Plans",
+                        subcategory: provider.basicsMap["familyPlan"],
                       ),
                       const SizedBox(height: 25),
                       buildInsideSubCategory(
                         icon: Icons.medical_information,
                         subcategoryname: "Covid Vaccine",
+                        subcategory: provider.basicsMap["covidVaccine"],
                       ),
                       const SizedBox(height: 25),
                       buildInsideSubCategory(
                         icon: Icons.tips_and_updates_rounded,
                         subcategoryname: "Personality Type",
+                        subcategory: provider.basicsMap["personalityType"],
                       ),
                       const SizedBox(height: 25),
                       buildInsideSubCategory(
                         icon: Icons.add_call,
                         subcategoryname: "Communication style",
+                        subcategory: provider.basicsMap["communication"],
                       ),
                       const SizedBox(height: 25),
                       buildInsideSubCategory(
                         icon: CupertinoIcons.heart,
                         subcategoryname: "Love style",
+                        subcategory: provider.basicsMap["loveStyle"],
                       ),
                       const SizedBox(height: 10),
                     ],
@@ -827,37 +833,39 @@ class _EditProfileState extends State<EditProfile> {
                       buildLifeStyleCategory(
                         icon: Icons.pets_outlined,
                         subcategoryname: "Pets",
+                        subcategory: provider.lifestyleMap["pets"],
                       ),
                       const SizedBox(height: 25),
                       buildLifeStyleCategory(
-                        icon: Icons.blender_outlined,
-                        subcategoryname: "Drinking",
-                      ),
+                          icon: Icons.blender_outlined,
+                          subcategoryname: "Drinking",
+                          subcategory: provider.lifestyleMap["drinking"]),
                       const SizedBox(height: 25),
                       buildLifeStyleCategory(
-                        icon: Icons.smoking_rooms,
-                        subcategoryname: "Smoking",
-                      ),
+                          icon: Icons.smoking_rooms,
+                          subcategoryname: "Smoking",
+                          subcategory: provider.lifestyleMap["smoking"]),
                       const SizedBox(height: 25),
                       buildLifeStyleCategory(
-                        icon: Icons.sports_gymnastics,
-                        subcategoryname: "Workout",
-                      ),
+                          icon: Icons.sports_gymnastics,
+                          subcategoryname: "Workout",
+                          subcategory: provider.lifestyleMap["workout"]),
                       const SizedBox(height: 25),
                       buildLifeStyleCategory(
-                        icon: Icons.local_pizza_outlined,
-                        subcategoryname: "Dietary Preference",
-                      ),
+                          icon: Icons.local_pizza_outlined,
+                          subcategoryname: "Dietary Preference",
+                          subcategory:
+                              provider.lifestyleMap["dietaryPreference"]),
                       const SizedBox(height: 25),
                       buildLifeStyleCategory(
-                        icon: CupertinoIcons.at,
-                        subcategoryname: "Social Media",
-                      ),
+                          icon: CupertinoIcons.at,
+                          subcategoryname: "Social Media",
+                          subcategory: provider.lifestyleMap["socialMedia"]),
                       const SizedBox(height: 25),
                       buildLifeStyleCategory(
-                        icon: CupertinoIcons.bed_double,
-                        subcategoryname: "Sleeping Habits",
-                      ),
+                          icon: CupertinoIcons.bed_double,
+                          subcategoryname: "Sleeping Habits",
+                          subcategory: provider.lifestyleMap["sleepingHabits"]),
                       const SizedBox(height: 10),
                     ],
                   ),
@@ -889,19 +897,19 @@ class _EditProfileState extends State<EditProfile> {
                   child: Column(
                     children: [
                       buildAskMeAboutCategory(
-                        icon: Icons.travel_explore,
-                        subcategoryname: "Going Out",
-                      ),
+                          icon: Icons.travel_explore,
+                          subcategoryname: "Going Out",
+                          subcategory: provider.aboutMap["goingOut"]),
                       const SizedBox(height: 25),
                       buildAskMeAboutCategory(
-                        icon: Icons.weekend_rounded,
-                        subcategoryname: "My Weekends",
-                      ),
+                          icon: Icons.weekend_rounded,
+                          subcategoryname: "My Weekends",
+                          subcategory: provider.aboutMap["myWeekends"]),
                       const SizedBox(height: 25),
                       buildAskMeAboutCategory(
-                        icon: Icons.contact_phone_rounded,
-                        subcategoryname: "Me + My Phone",
-                      ),
+                          icon: Icons.contact_phone_rounded,
+                          subcategoryname: "Me + My Phone",
+                          subcategory: provider.aboutMap["meandmyphone"]),
                       const SizedBox(height: 10),
                     ],
                   ),
@@ -1081,7 +1089,7 @@ class _EditProfileState extends State<EditProfile> {
               children: [
                 Expanded(
                   child: Text(
-                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.end,
                     subcategory ?? "Empty",
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -1149,8 +1157,8 @@ class _EditProfileState extends State<EditProfile> {
               children: [
                 Expanded(
                   child: Text(
-                    textDirection: TextDirection.rtl,
                     subcategory ?? "Empty",
+                    textAlign: TextAlign.end,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       overflow: TextOverflow.ellipsis,
@@ -1217,8 +1225,8 @@ class _EditProfileState extends State<EditProfile> {
               children: [
                 Expanded(
                   child: Text(
-                    textDirection: TextDirection.rtl,
                     subcategory ?? "Empty",
+                    textAlign: TextAlign.end,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       overflow: TextOverflow.ellipsis,
@@ -1414,27 +1422,7 @@ class _EditProfileState extends State<EditProfile> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               controller: scrollController,
               children: [
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     IconButton(
-                //         onPressed: () {
-                //           Navigator.of(context).pop();
-                //         },
-                //         icon: const Icon(
-                //           CupertinoIcons.multiply,
-                //           color: Colors.white,
-                //           size: 30,
-                //         )),
-                //     IconButton(
-                //         onPressed: () {},
-                //         icon: const Icon(
-                //           CupertinoIcons.check_mark,
-                //           color: Colors.white,
-                //           size: 30,
-                //         )),
-                //   ],
-                // ),
+                const SizedBox(height: 10),
                 const SizedBox(
                   child: Text(
                     "Basics",
@@ -1465,7 +1453,7 @@ class _EditProfileState extends State<EditProfile> {
                     SizedBox(
                       width: 6,
                     ),
-                    SizedBox(
+                    Expanded(
                       child: Text(
                         "What is your zodiac sign?",
                         style: TextStyle(
@@ -1494,7 +1482,222 @@ class _EditProfileState extends State<EditProfile> {
                     buildChip(title: "Sagittarius", type: "zodiac"),
                   ],
                 ),
-                Container(),
+                const SizedBox(height: 20),
+                const Row(
+                  children: [
+                    Icon(
+                      Icons.menu_book_sharp,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        "What is your education level?",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  children: [
+                    buildChip(title: "Bachelors", type: "eduction"),
+                    buildChip(title: "In college", type: "eduction"),
+                    buildChip(title: "High School", type: "eduction"),
+                    buildChip(title: "PhD", type: "eduction"),
+                    buildChip(title: "In Grad School", type: "eduction"),
+                    buildChip(title: "Masters", type: "eduction"),
+                    buildChip(title: "Trade School", type: "eduction"),
+                    buildChip(title: "12th pass", type: "eduction"),
+                    buildChip(title: "Below 12th", type: "eduction"),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                const Row(
+                  children: [
+                    Icon(
+                      Icons.family_restroom,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        "Do you want children?",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  children: [
+                    buildChip(title: "I want children", type: "familyPlan"),
+                    buildChip(
+                        title: "I don't want children", type: "familyPlan"),
+                    buildChip(
+                        title: "I have chidren and want more",
+                        type: "familyPlan"),
+                    buildChip(
+                        title: "I have chidren and don't want more",
+                        type: "familyPlan"),
+                    buildChip(title: "Not sure yet", type: "familyPlan"),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const Row(
+                  children: [
+                    Icon(
+                      Icons.medical_information,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        "Are you vaccinated?",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  children: [
+                    buildChip(title: "Vaccinated", type: "covidVaccine"),
+                    buildChip(title: "Unvaccinated", type: "covidVaccine"),
+                    buildChip(title: "Prefer not to say", type: "covidVaccine"),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const Row(
+                  children: [
+                    Icon(
+                      Icons.tips_and_updates_rounded,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        "What's your Personality Type?",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  children: [
+                    buildChip(title: "INTJ", type: "personalityType"),
+                    buildChip(title: "INTP", type: "personalityType"),
+                    buildChip(title: "ENTJ", type: "personalityType"),
+                    buildChip(title: "ENTP", type: "personalityType"),
+                    buildChip(title: "INFJ", type: "personalityType"),
+                    buildChip(title: "INFP", type: "personalityType"),
+                    buildChip(title: "ENFJ", type: "personalityType"),
+                    buildChip(title: "ENFP", type: "personalityType"),
+                    buildChip(title: "ISTJ", type: "personalityType"),
+                    buildChip(title: "ISFJ", type: "personalityType"),
+                    buildChip(title: "ESTJ", type: "personalityType"),
+                    buildChip(title: "ESFJ", type: "personalityType"),
+                    buildChip(title: "ISTP", type: "personalityType"),
+                    buildChip(title: "ISFP", type: "personalityType"),
+                    buildChip(title: "ESTP", type: "personalityType"),
+                    buildChip(title: "ESFP", type: "personalityType"),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const Row(
+                  children: [
+                    Icon(
+                      Icons.add_call,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        "What is your communication style?",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  children: [
+                    buildChip(
+                        title: "I stay on WhatsApp all day",
+                        type: "communication"),
+                    buildChip(title: "Big time texter", type: "communication"),
+                    buildChip(title: "Phone caller", type: "communication"),
+                    buildChip(title: "Video chatter", type: "communication"),
+                    buildChip(
+                        title: "I'm slow to answer on WhatsApp",
+                        type: "communication"),
+                    buildChip(title: "Bad texter", type: "communication"),
+                    buildChip(title: "Better in person", type: "communication"),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.heart,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        "How do you receive love?",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  children: [
+                    buildChip(title: "Thoughtful gestures", type: "loveStyle"),
+                    buildChip(title: "Presents", type: "loveStyle"),
+                    buildChip(title: "Touch", type: "loveStyle"),
+                    buildChip(title: "Compliments", type: "loveStyle"),
+                    buildChip(title: "Time together", type: "loveStyle"),
+                  ],
+                ),
               ],
             ),
           );
@@ -1535,6 +1738,70 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+  Widget buildLifeStyleChip({required String title, required String type}) {
+    return Consumer<ProfileProvider>(
+      builder: (context, value, child) {
+        return InkWell(
+          onTap: () {
+            value.setLifeStyle(
+              item: title,
+              isSelected: value.lifestyleMap[type] == title,
+              key: type,
+            );
+          },
+          child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Chip(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                    color: value.lifestyleMap[type] == title
+                        ? const Color(0xFFFE3C72)
+                        : Colors.grey,
+                  ),
+                ),
+                label: Text(
+                  title,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              )),
+        );
+      },
+    );
+  }
+
+  Widget buildAboutChip({required String title, required String type}) {
+    return Consumer<ProfileProvider>(
+      builder: (context, value, child) {
+        return InkWell(
+          onTap: () {
+            value.setAskMeAbout(
+              item: title,
+              isSelected: value.aboutMap[type] == title,
+              key: type,
+            );
+          },
+          child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Chip(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                    color: value.aboutMap[type] == title
+                        ? const Color(0xFFFE3C72)
+                        : Colors.grey,
+                  ),
+                ),
+                label: Text(
+                  title,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              )),
+        );
+      },
+    );
+  }
+
   Widget buildSheetAboutme() {
     return makeDismissable(
       child: DraggableScrollableSheet(
@@ -1551,7 +1818,133 @@ class _EditProfileState extends State<EditProfile> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: ListView(
-                controller: scrollController, children: [Text("data")]),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              controller: scrollController,
+              children: [
+                const SizedBox(height: 10),
+                const SizedBox(
+                  child: Text(
+                    "Ask me about",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  child: Text(
+                    "Bring your best self forward by adding more about you",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.moon_stars,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        "Going out?",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  children: [
+                    buildAboutChip(title: "dancing", type: "goingOut"),
+                    buildAboutChip(title: "dress up", type: "goingOut"),
+                    buildAboutChip(title: "early", type: "goingOut"),
+                    buildAboutChip(title: "fashionably late", type: "goingOut"),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const Row(
+                  children: [
+                    Icon(
+                      Icons.menu_book_sharp,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        "My weekends",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  children: [
+                    buildAboutChip(title: "recharging", type: "myWeekends"),
+                    buildAboutChip(title: "socializing", type: "myWeekends"),
+                    buildAboutChip(title: "cozy nights in", type: "myWeekends"),
+                    buildAboutChip(title: "fun nights out", type: "myWeekends"),
+                    buildAboutChip(title: "sunday funday", type: "myWeekends"),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                const Row(
+                  children: [
+                    Icon(
+                      Icons.family_restroom,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Expanded(
+                      child: Text(
+                        "Me + My Phone",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  children: [
+                    buildAboutChip(
+                        title: "replies quickly", type: "meandmyphone"),
+                    buildAboutChip(
+                        title: "forgets to reply", type: "meandmyphone"),
+                    buildAboutChip(
+                        title: "text messages", type: "meandmyphone"),
+                    buildAboutChip(
+                      title: "phone calls",
+                      type: "meandmyphone",
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
           );
         },
       ),
@@ -1574,7 +1967,287 @@ class _EditProfileState extends State<EditProfile> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: ListView(
-                controller: scrollController, children: [Text("data")]),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                controller: scrollController,
+                children: [
+                  const SizedBox(height: 10),
+                  const SizedBox(
+                    child: Text(
+                      "Life Style",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    child: Text(
+                      "Bring your best self forward by adding your lifestyle",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.pets_outlined,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Expanded(
+                        child: Text(
+                          "Do you have any pets?",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 19,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    children: [
+                      buildLifeStyleChip(title: "Dog", type: "pets"),
+                      buildLifeStyleChip(title: "Cat", type: "pets"),
+                      buildLifeStyleChip(title: "Reptile", type: "pets"),
+                      buildLifeStyleChip(title: "Amphibian", type: "pets"),
+                      buildLifeStyleChip(title: "Bird", type: "pets"),
+                      buildLifeStyleChip(title: "Fish", type: "pets"),
+                      buildLifeStyleChip(
+                          title: "Don't have but love", type: "pets"),
+                      buildLifeStyleChip(title: "Other", type: "pets"),
+                      buildLifeStyleChip(title: "Turtle", type: "pets"),
+                      buildLifeStyleChip(title: "Hamster", type: "pets"),
+                      buildLifeStyleChip(title: "Rabbit", type: "pets"),
+                      buildLifeStyleChip(title: "Pet-free", type: "pets"),
+                      buildLifeStyleChip(title: "All the pets", type: "pets"),
+                      buildLifeStyleChip(title: "Want a pet", type: "pets"),
+                      buildLifeStyleChip(
+                          title: "Allergic to pets", type: "pets"),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.blender_outlined,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Expanded(
+                        child: Text(
+                          "How often you drink?",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 19,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    children: [
+                      buildLifeStyleChip(title: "Not for me", type: "drinking"),
+                      buildLifeStyleChip(title: "Sober", type: "drinking"),
+                      buildLifeStyleChip(
+                          title: "Sober curious", type: "drinking"),
+                      buildLifeStyleChip(
+                          title: "On special occasions", type: "drinking"),
+                      buildLifeStyleChip(
+                          title: "Socially on weekends", type: "drinking"),
+                      buildLifeStyleChip(
+                          title: "Most Nights", type: "drinking"),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.smoking_rooms,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Expanded(
+                        child: Text(
+                          "How often you smoke?",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 19,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    children: [
+                      buildLifeStyleChip(
+                          title: "Social smoker", type: "smoking"),
+                      buildLifeStyleChip(
+                          title: "Smoker when drinking", type: "smoking"),
+                      buildLifeStyleChip(title: "Non-smoker", type: "smoking"),
+                      buildLifeStyleChip(title: "Smoker", type: "smoking"),
+                      buildLifeStyleChip(
+                          title: "Trying to quit", type: "smoking"),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.sports_gymnastics,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Expanded(
+                        child: Text(
+                          "Do you workout?",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 19,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    children: [
+                      buildLifeStyleChip(title: "Everyday", type: "workout"),
+                      buildLifeStyleChip(title: "Often", type: "workout"),
+                      buildLifeStyleChip(title: "Sometimes", type: "workout"),
+                      buildLifeStyleChip(title: "Never", type: "workout"),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.local_pizza_outlined,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Expanded(
+                        child: Text(
+                          "What are your dietary preference?",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 19,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    children: [
+                      buildLifeStyleChip(
+                          title: "Vegan", type: "dietaryPreference"),
+                      buildLifeStyleChip(
+                          title: "Vegetarian", type: "dietaryPreference"),
+                      buildLifeStyleChip(
+                          title: "Pescatarian", type: "dietaryPreference"),
+                      buildLifeStyleChip(
+                          title: "Kosher", type: "dietaryPreference"),
+                      buildLifeStyleChip(
+                          title: "Carnivore", type: "dietaryPreference"),
+                      buildLifeStyleChip(
+                          title: "Omnivare", type: "dietaryPreference"),
+                      buildLifeStyleChip(
+                          title: "Other", type: "dietaryPreference"),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.at,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Expanded(
+                        child: Text(
+                          "How active are you on social media?",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 19,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    children: [
+                      buildLifeStyleChip(
+                          title: "Influencer status", type: "socialMedia"),
+                      buildLifeStyleChip(
+                          title: "Socially active", type: "socialMedia"),
+                      buildLifeStyleChip(
+                          title: "Off the grid", type: "socialMedia"),
+                      buildLifeStyleChip(
+                          title: "Passive scroller", type: "socialMedia"),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Row(
+                    children: [
+                      Icon(
+                        CupertinoIcons.bed_double,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Expanded(
+                        child: Text(
+                          "What are your sleeping habits?",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 19,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    children: [
+                      buildLifeStyleChip(
+                          title: "Early bid", type: "sleepingHabits"),
+                      buildLifeStyleChip(
+                          title: "Night owl", type: "sleepingHabits"),
+                      buildLifeStyleChip(
+                          title: "In a spectrum", type: "sleepingHabits"),
+                    ],
+                  ),
+                ]),
           );
         },
       ),
