@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -106,45 +107,33 @@ class _EditProfileState extends State<EditProfile> {
       Navigator.of(context).pop();
       return const SizedBox();
     }
-    return Scaffold(
-      appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
-        title: RichText(
-            text: const TextSpan(children: [
-          TextSpan(
-            text: "Edit Profile",
-            style: TextStyle(
-              fontSize: 25,
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
+    return PopScope(
+      onPopInvoked: (didPop) {
+        provider.resetProfile();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          surfaceTintColor: Colors.transparent,
+          title: RichText(
+              text: const TextSpan(children: [
+            TextSpan(
+              text: "Edit Profile",
+              style: TextStyle(
+                fontSize: 25,
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          ),
-        ])),
-        titleSpacing: 10,
-        leading: const SizedBox(),
-        leadingWidth: 0,
-        actions: [
-          provider.profileupdating
-              ? Container(
-                  height: 35,
-                  width: 35,
-                  margin: const EdgeInsets.only(right: 5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: const LinearGradient(
-                        colors: [Colors.orange, Colors.pink, Colors.red],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        stops: [0, 0.5, 0.7]),
-                  ),
-                  padding: const EdgeInsets.all(4),
-                  child: const CupertinoActivityIndicator(
-                    color: Colors.white,
-                  ),
-                )
-              : IconButton(
-                  onPressed: updateProfile,
-                  icon: Container(
+          ])),
+          titleSpacing: 10,
+          leading: const SizedBox(),
+          leadingWidth: 0,
+          actions: [
+            provider.profileupdating
+                ? Container(
+                    height: 35,
+                    width: 35,
+                    margin: const EdgeInsets.only(right: 5),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       gradient: const LinearGradient(
@@ -154,812 +143,834 @@ class _EditProfileState extends State<EditProfile> {
                           stops: [0, 0.5, 0.7]),
                     ),
                     padding: const EdgeInsets.all(4),
-                    child: const Icon(
-                      Icons.save,
+                    child: const CupertinoActivityIndicator(
                       color: Colors.white,
                     ),
-                  ),
-                ),
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: const LinearGradient(
-                    colors: [Colors.orange, Colors.pink, Colors.red],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: [0, 0.5, 0.7]),
-              ),
-              padding: const EdgeInsets.all(4),
-              child: const Icon(
-                CupertinoIcons.down_arrow,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-        // backgroundColor: const Color.fromARGB(113, 107, 102, 107),
-
-        // backgroundColor: Color(0xFF23272A),
-        backgroundColor: Colors.black,
-      ),
-      body: SingleChildScrollView(
-          child: Padding(
-        padding: const EdgeInsets.only(left: 7, right: 7, bottom: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 5),
-              child: Text(
-                "Media",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 9,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 2 / 3,
-              ),
-              itemBuilder: (context, index) {
-                return buildWithOutImage();
-              },
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 5, top: 10, bottom: 5),
-              child: Text(
-                "About me",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: TextFormField(
-                controller: _aboutController
-                  ..text = _aboutController.text.isEmpty
-                      ? provider.profile!.aboutme ?? ""
-                      : _aboutController.text,
-                maxLines: 4,
-                maxLength: 300,
-                style: const TextStyle(color: Colors.white),
-                cursorColor: const Color(0xFFFE3C72),
-                decoration: const InputDecoration(
-                  fillColor: Color.fromARGB(255, 19, 21, 23),
-                  filled: true,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  hintText: "About you?",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(7),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            buildMainCategory(
-              icon: CupertinoIcons.add,
-              height: 610,
-              subcategoryname: provider.interest ?? "Select interest",
-              title: "Interests",
-              modalContent: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.only(top: 10, left: 15),
-                      child: Consumer<ProfileProvider>(
-                        builder: (context, value, child) {
-                          return Text(
-                            "I have interest in  ${value.interest ?? "..."}",
-                            style: const TextStyle(
-                              fontSize: 22,
-                              color: Colors.white,
-                            ),
-                          );
-                        },
-                      )),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 30, 32, 34),
-                    ),
-                    child: Consumer<ProfileProvider>(
-                      builder: (context, value, child) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildInterestSelect(interest: "Movie"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildInterestSelect(interest: "Shopping"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildInterestSelect(interest: "Cricket"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildInterestSelect(interest: "Gym"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildInterestSelect(interest: "Dancing"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildInterestSelect(interest: "Vlogging"),
-                          ],
-                        );
-                      },
-                    ),
                   )
-                ],
-              ),
-            ),
-            buildMainCategory(
-              icon: CupertinoIcons.eye,
-              height: 400,
-              subcategoryname: provider.relationshipGoal ?? "Looking for...",
-              title: "Relationship Goals",
-              modalContent: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      "Right now I'm looking for...",
-                      style: TextStyle(
-                        fontSize: 27,
+                : IconButton(
+                    onPressed: updateProfile,
+                    icon: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        gradient: const LinearGradient(
+                            colors: [Colors.orange, Colors.pink, Colors.red],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            stops: [0, 0.5, 0.7]),
+                      ),
+                      padding: const EdgeInsets.all(4),
+                      child: const Icon(
+                        Icons.save,
                         color: Colors.white,
-                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 5),
-                    child: Text(
-                      "Increase compatibility by sharing yours!",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    width: double.infinity,
-                    child: Consumer<ProfileProvider>(
-                      builder: (context, value, child) {
-                        return Wrap(
-                          alignment: WrapAlignment.center,
-                          runAlignment: WrapAlignment.start,
-                          verticalDirection: VerticalDirection.down,
-                          crossAxisAlignment: WrapCrossAlignment.start,
-                          direction: Axis.horizontal,
-                          runSpacing: 7,
-                          spacing: 7,
-                          children: [
-                            buildRelationShipGoalSelect(
-                                icon: "💘",
-                                type: "💘 Long-term parter",
-                                text: "Long-term parter"),
-                            buildRelationShipGoalSelect(
-                                icon: "😍",
-                                type: "😍 Long-term, open to short",
-                                text: "Long-term, open to short"),
-                            buildRelationShipGoalSelect(
-                                icon: "🍷",
-                                type: "🍷 Short-term open to long",
-                                text: "Short-term open to long"),
-                            buildRelationShipGoalSelect(
-                                icon: "🎉",
-                                type: "🎉 Short-term fun",
-                                text: "Short-term fun"),
-                            buildRelationShipGoalSelect(
-                                icon: "👋",
-                                type: "👋 New friends",
-                                text: "New friends"),
-                            buildRelationShipGoalSelect(
-                              icon: "🤔",
-                              type: "🤔 Still figuring it out",
-                              text: "Still figuring it out",
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  )
-                ],
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  gradient: const LinearGradient(
+                      colors: [Colors.orange, Colors.pink, Colors.red],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      stops: [0, 0.5, 0.7]),
+                ),
+                padding: const EdgeInsets.all(4),
+                child: const Icon(
+                  CupertinoIcons.down_arrow,
+                  color: Colors.white,
+                ),
               ),
             ),
-            buildMainCategory(
-              icon: CupertinoIcons.tag,
-              height: 420,
-              subcategoryname: provider.height == null
-                  ? "Add height"
-                  : "${provider.height} cm",
-              title: "Height",
-              modalContent: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
+          ],
+          // backgroundColor: const Color.fromARGB(113, 107, 102, 107),
+
+          // backgroundColor: Color(0xFF23272A),
+          backgroundColor: Colors.black,
+        ),
+        body: SingleChildScrollView(
+            child: Padding(
+          padding: const EdgeInsets.only(left: 7, right: 7, bottom: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 5),
+                child: Text(
+                  "Media",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 9,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 2 / 3,
+                ),
+                itemBuilder: (context, index) {
+                  return provider.images!.isEmpty
+                      ? buildWithOutImage()
+                      : buildWithImage(image: provider.images![0]);
+                },
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 5, top: 10, bottom: 5),
+                child: Text(
+                  "About me",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: TextFormField(
+                  controller: _aboutController
+                    ..text = _aboutController.text.isEmpty
+                        ? provider.profile!.aboutme ?? ""
+                        : _aboutController.text,
+                  maxLines: 4,
+                  maxLength: 300,
+                  style: const TextStyle(color: Colors.white),
+                  cursorColor: const Color(0xFFFE3C72),
+                  decoration: const InputDecoration(
+                    fillColor: Color.fromARGB(255, 19, 21, 23),
+                    filled: true,
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    hintText: "About you?",
+                    hintStyle: TextStyle(color: Colors.grey),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(7),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              buildMainCategory(
+                icon: CupertinoIcons.add,
+                height: 610,
+                subcategoryname: provider.interest ?? "Select interest",
+                title: "Interests",
+                modalContent: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Padding(
+                        padding: const EdgeInsets.only(top: 10, left: 15),
+                        child: Consumer<ProfileProvider>(
+                          builder: (context, value, child) {
+                            return Text(
+                              "I have interest in  ${value.interest ?? "..."}",
+                              style: const TextStyle(
+                                fontSize: 22,
+                                color: Colors.white,
+                              ),
+                            );
+                          },
+                        )),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 30, 32, 34),
+                      ),
+                      child: Consumer<ProfileProvider>(
+                        builder: (context, value, child) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildInterestSelect(interest: "Movie"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildInterestSelect(interest: "Shopping"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildInterestSelect(interest: "Cricket"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildInterestSelect(interest: "Gym"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildInterestSelect(interest: "Dancing"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildInterestSelect(interest: "Vlogging"),
+                            ],
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              buildMainCategory(
+                icon: CupertinoIcons.eye,
+                height: 400,
+                subcategoryname: provider.relationshipGoal ?? "Looking for...",
+                title: "Relationship Goals",
+                modalContent: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
                     const Padding(
-                      padding: EdgeInsets.only(left: 10, top: 2),
+                      padding: EdgeInsets.only(top: 20, left: 20, right: 20),
                       child: Text(
-                        "Height",
+                        textAlign: TextAlign.center,
+                        "Right now I'm looking for...",
                         style: TextStyle(
+                          fontSize: 27,
                           color: Colors.white,
-                          fontSize: 30,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.only(left: 10, top: 2),
+                      padding: EdgeInsets.only(top: 5),
                       child: Text(
-                        "Here's a chance to add height to your profile",
+                        "Increase compatibility by sharing yours!",
                         style: TextStyle(
+                          fontSize: 16,
                           color: Colors.grey,
-                          fontSize: 17,
-                          wordSpacing: 0,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),
-                    Consumer<ProfileProvider>(
-                      builder: (context, value, child) {
-                        return Padding(
-                          padding:
-                              const EdgeInsets.only(left: 5, right: 5, top: 10),
-                          child: TextFormField(
-                            initialValue: value.height ?? "",
-                            maxLines: 1,
-                            onChanged: (res) {
-                              value.addHeight(
-                                  height: res, isSelected: res.isEmpty);
-                            },
-                            keyboardType: TextInputType.number,
-                            style: const TextStyle(color: Colors.white),
-                            cursorColor: const Color(0xFFFE3C72),
-                            decoration: const InputDecoration(
-                              fillColor: Color.fromARGB(255, 30, 32, 34),
-                              filled: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                              hintText: "Add height in cm",
-                              hintStyle: TextStyle(color: Colors.grey),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(7),
-                                ),
+                    const SizedBox(height: 20),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      child: Consumer<ProfileProvider>(
+                        builder: (context, value, child) {
+                          return Wrap(
+                            alignment: WrapAlignment.center,
+                            runAlignment: WrapAlignment.start,
+                            verticalDirection: VerticalDirection.down,
+                            crossAxisAlignment: WrapCrossAlignment.start,
+                            direction: Axis.horizontal,
+                            runSpacing: 7,
+                            spacing: 7,
+                            children: [
+                              buildRelationShipGoalSelect(
+                                  icon: "💘",
+                                  type: "💘 Long-term parter",
+                                  text: "Long-term parter"),
+                              buildRelationShipGoalSelect(
+                                  icon: "😍",
+                                  type: "😍 Long-term, open to short",
+                                  text: "Long-term, open to short"),
+                              buildRelationShipGoalSelect(
+                                  icon: "🍷",
+                                  type: "🍷 Short-term open to long",
+                                  text: "Short-term open to long"),
+                              buildRelationShipGoalSelect(
+                                  icon: "🎉",
+                                  type: "🎉 Short-term fun",
+                                  text: "Short-term fun"),
+                              buildRelationShipGoalSelect(
+                                  icon: "👋",
+                                  type: "👋 New friends",
+                                  text: "New friends"),
+                              buildRelationShipGoalSelect(
+                                icon: "🤔",
+                                type: "🤔 Still figuring it out",
+                                text: "Still figuring it out",
                               ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 15),
-                    Center(
-                      child: ElevatedButton(
-                          onPressed: () {
-                            provider.addHeight(height: "", isSelected: true);
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(
-                            "Reset Height",
-                            style: TextStyle(color: Colors.white),
-                          )),
-                    ),
+                            ],
+                          );
+                        },
+                      ),
+                    )
                   ],
                 ),
               ),
-            ),
-            buildMainCategory(
-              icon: CupertinoIcons.eye,
-              height: 340,
-              subcategoryname: provider.relationshipType ?? "Open to...",
-              title: "Relationship Type",
-              modalContent: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.only(top: 10, left: 15),
-                      child: Consumer<ProfileProvider>(
-                        builder: (context, value, child) {
-                          return Text(
-                            "I Am ${value.relationshipType ?? "..."}",
-                            style: const TextStyle(
-                              fontSize: 22,
-                              color: Colors.white,
-                            ),
-                          );
-                        },
-                      )),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 30, 32, 34),
-                    ),
-                    child: Consumer<ProfileProvider>(
-                      builder: (context, value, child) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildRelationShipTypeSelect(type: "Monogamy"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildRelationShipTypeSelect(
-                                type: "Ethical non-monogamy"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildRelationShipTypeSelect(type: "Polyagamy"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildRelationShipTypeSelect(
-                                type: "Open to exploring"),
-                          ],
-                        );
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-            buildMainCategory(
-              icon: Icons.language,
-              height: 300,
-              subcategoryname: "Add languages",
-              title: "Languages I Know",
-              modalContent: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.only(top: 10, left: 15),
-                      child: Consumer<ProfileProvider>(
-                        builder: (context, value, child) {
-                          return Text(
-                            "Languages I Know ${value.language!.isNotEmpty ? value.language!.map((e) => e) : "..."}",
-                            style: const TextStyle(
-                              fontSize: 22,
-                              color: Colors.white,
-                            ),
-                          );
-                        },
-                      )),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 30, 32, 34),
-                    ),
-                    child: Consumer<ProfileProvider>(
-                      builder: (context, value, child) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildLanguageSelect(language: "English"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildLanguageSelect(language: "Hindi"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildLanguageSelect(language: "Gujrati"),
-                          ],
-                        );
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-            buildMainCategory(
-              icon: Icons.boy,
-              height: 230,
-              subcategoryname: "I Am ${provider.gender ?? "..."}",
-              title: "Gender",
-              modalContent: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.only(top: 10, left: 15),
-                      child: Consumer<ProfileProvider>(
-                        builder: (context, value, child) {
-                          return Text(
-                            "I Am ${value.gender ?? "..."}",
-                            style: const TextStyle(
-                              fontSize: 22,
-                              color: Colors.white,
-                            ),
-                          );
-                        },
-                      )),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 30, 32, 34),
-                    ),
-                    child: Consumer<ProfileProvider>(
-                      builder: (context, value, child) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildGenderSelect(gender: "Men"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildGenderSelect(gender: "Women"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildGenderSelect(gender: "Other"),
-                          ],
-                        );
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-            buildMainCategory(
-              icon: Icons.language,
-              height: 500,
-              subcategoryname: provider.sexualOrientation == null
-                  ? "Add sexual Orintation"
-                  : "I am ${provider.sexualOrientation}",
-              title: "Sexual Orientation",
-              modalContent: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.only(top: 10, left: 15),
-                      child: Consumer<ProfileProvider>(
-                        builder: (context, value, child) {
-                          return Text(
-                            "I Am ${value.sexualOrientation ?? "..."}",
-                            style: const TextStyle(
-                              fontSize: 22,
-                              color: Colors.white,
-                            ),
-                          );
-                        },
-                      )),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 30, 32, 34),
-                    ),
-                    child: Consumer<ProfileProvider>(
-                      builder: (context, value, child) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildSexualOrientationSelect(sex: "Straight"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildSexualOrientationSelect(sex: "Lesbian"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildSexualOrientationSelect(sex: "Gay"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildSexualOrientationSelect(sex: "Bisexual"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildSexualOrientationSelect(sex: "Asexual"),
-                            const SizedBox(height: 5),
-                            const Divider(
-                                color: Color.fromARGB(255, 66, 70, 75)),
-                            const SizedBox(height: 5),
-                            buildSexualOrientationSelect(sex: "Demisexual"),
-                            //   const SizedBox(height: 5),
-                            //   const Divider(
-                            //       color: Color.fromARGB(255, 66, 70, 75)),
-                            //   const SizedBox(height: 5),
-                            //   buildGenderSelect(gender: "Pansexual"),
-                            //   const SizedBox(height: 5),
-                            //   const Divider(
-                            //       color: Color.fromARGB(255, 66, 70, 75)),
-                            //   const SizedBox(height: 5),
-                            //   buildGenderSelect(gender: "Queer"),
-                            //   const SizedBox(height: 5),
-                            //   const Divider(
-                            //       color: Color.fromARGB(255, 66, 70, 75)),
-                            //   const SizedBox(height: 5),
-                            //   buildGenderSelect(gender: "Bicurios"),
-                            //   const SizedBox(height: 5),
-                            //   const Divider(
-                            //       color: Color.fromARGB(255, 66, 70, 75)),
-                            //   const SizedBox(height: 5),
-                            //   buildGenderSelect(gender: "Aromantic"),
-                          ],
-                        );
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 5, top: 20, bottom: 5),
-              child: Text(
-                "Basics",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 13),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(6)),
-                  color: Color.fromARGB(255, 19, 21, 23),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 5),
+              buildMainCategory(
+                icon: CupertinoIcons.tag,
+                height: 420,
+                subcategoryname: provider.height == null
+                    ? "Add height"
+                    : "${provider.height} cm",
+                title: "Height",
+                modalContent: Padding(
+                  padding: const EdgeInsets.all(10),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      buildInsideSubCategory(
-                        icon: CupertinoIcons.moon_stars,
-                        subcategoryname: "Zodiac",
-                        subcategory: provider.basicsMap["zodiac"],
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10, top: 2),
+                        child: Text(
+                          "Height",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.menu_book_sharp,
-                        subcategoryname: "Education",
-                        subcategory: provider.basicsMap["eduction"],
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10, top: 2),
+                        child: Text(
+                          "Here's a chance to add height to your profile",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 17,
+                            wordSpacing: 0,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.family_restroom,
-                        subcategoryname: "Family Plans",
-                        subcategory: provider.basicsMap["familyPlan"],
+                      Consumer<ProfileProvider>(
+                        builder: (context, value, child) {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                left: 5, right: 5, top: 10),
+                            child: TextFormField(
+                              initialValue: value.height ?? "",
+                              maxLines: 1,
+                              onChanged: (res) {
+                                value.addHeight(
+                                    height: res, isSelected: res.isEmpty);
+                              },
+                              keyboardType: TextInputType.number,
+                              style: const TextStyle(color: Colors.white),
+                              cursorColor: const Color(0xFFFE3C72),
+                              decoration: const InputDecoration(
+                                fillColor: Color.fromARGB(255, 30, 32, 34),
+                                filled: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                hintText: "Add height in cm",
+                                hintStyle: TextStyle(color: Colors.grey),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(7),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.medical_information,
-                        subcategoryname: "Covid Vaccine",
-                        subcategory: provider.basicsMap["covidVaccine"],
+                      const SizedBox(height: 15),
+                      Center(
+                        child: ElevatedButton(
+                            onPressed: () {
+                              provider.addHeight(height: "", isSelected: true);
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              "Reset Height",
+                              style: TextStyle(color: Colors.white),
+                            )),
                       ),
-                      const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.tips_and_updates_rounded,
-                        subcategoryname: "Personality Type",
-                        subcategory: provider.basicsMap["personalityType"],
-                      ),
-                      const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: Icons.add_call,
-                        subcategoryname: "Communication style",
-                        subcategory: provider.basicsMap["communication"],
-                      ),
-                      const SizedBox(height: 25),
-                      buildInsideSubCategory(
-                        icon: CupertinoIcons.heart,
-                        subcategoryname: "Love style",
-                        subcategory: provider.basicsMap["loveStyle"],
-                      ),
-                      const SizedBox(height: 10),
                     ],
                   ),
                 ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 5, top: 20, bottom: 5),
-              child: Text(
-                "Lifestyle",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 13),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(6)),
-                  color: Color.fromARGB(255, 19, 21, 23),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 5),
-                  child: Column(
-                    children: [
-                      buildLifeStyleCategory(
-                        icon: Icons.pets_outlined,
-                        subcategoryname: "Pets",
-                        subcategory: provider.lifestyleMap["pets"],
+              buildMainCategory(
+                icon: CupertinoIcons.eye,
+                height: 340,
+                subcategoryname: provider.relationshipType ?? "Open to...",
+                title: "Relationship Type",
+                modalContent: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.only(top: 10, left: 15),
+                        child: Consumer<ProfileProvider>(
+                          builder: (context, value, child) {
+                            return Text(
+                              "I Am ${value.relationshipType ?? "..."}",
+                              style: const TextStyle(
+                                fontSize: 22,
+                                color: Colors.white,
+                              ),
+                            );
+                          },
+                        )),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 30, 32, 34),
                       ),
-                      const SizedBox(height: 25),
-                      buildLifeStyleCategory(
-                          icon: Icons.blender_outlined,
-                          subcategoryname: "Drinking",
-                          subcategory: provider.lifestyleMap["drinking"]),
-                      const SizedBox(height: 25),
-                      buildLifeStyleCategory(
-                          icon: Icons.smoking_rooms,
-                          subcategoryname: "Smoking",
-                          subcategory: provider.lifestyleMap["smoking"]),
-                      const SizedBox(height: 25),
-                      buildLifeStyleCategory(
-                          icon: Icons.sports_gymnastics,
-                          subcategoryname: "Workout",
-                          subcategory: provider.lifestyleMap["workout"]),
-                      const SizedBox(height: 25),
-                      buildLifeStyleCategory(
-                          icon: Icons.local_pizza_outlined,
-                          subcategoryname: "Dietary Preference",
-                          subcategory:
-                              provider.lifestyleMap["dietaryPreference"]),
-                      const SizedBox(height: 25),
-                      buildLifeStyleCategory(
-                          icon: CupertinoIcons.at,
-                          subcategoryname: "Social Media",
-                          subcategory: provider.lifestyleMap["socialMedia"]),
-                      const SizedBox(height: 25),
-                      buildLifeStyleCategory(
-                          icon: CupertinoIcons.bed_double,
-                          subcategoryname: "Sleeping Habits",
-                          subcategory: provider.lifestyleMap["sleepingHabits"]),
-                      const SizedBox(height: 10),
-                    ],
+                      child: Consumer<ProfileProvider>(
+                        builder: (context, value, child) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildRelationShipTypeSelect(type: "Monogamy"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildRelationShipTypeSelect(
+                                  type: "Ethical non-monogamy"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildRelationShipTypeSelect(type: "Polyagamy"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildRelationShipTypeSelect(
+                                  type: "Open to exploring"),
+                            ],
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              buildMainCategory(
+                icon: Icons.language,
+                height: 300,
+                subcategoryname: provider.language!.isNotEmpty
+                    ? "${provider.language!.map((e) => e)}"
+                    : "Add languages",
+                title: "Languages I Know",
+                modalContent: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.only(top: 10, left: 15),
+                        child: Consumer<ProfileProvider>(
+                          builder: (context, value, child) {
+                            return Text(
+                              "Languages I Know ${value.language!.isNotEmpty ? value.language!.map((e) => e) : "..."}",
+                              style: const TextStyle(
+                                fontSize: 22,
+                                color: Colors.white,
+                              ),
+                            );
+                          },
+                        )),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 30, 32, 34),
+                      ),
+                      child: Consumer<ProfileProvider>(
+                        builder: (context, value, child) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildLanguageSelect(language: "English"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildLanguageSelect(language: "Hindi"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildLanguageSelect(language: "Gujrati"),
+                            ],
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              buildMainCategory(
+                icon: Icons.boy,
+                height: 230,
+                subcategoryname: "I Am ${provider.gender ?? "..."}",
+                title: "Gender",
+                modalContent: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.only(top: 10, left: 15),
+                        child: Consumer<ProfileProvider>(
+                          builder: (context, value, child) {
+                            return Text(
+                              "I Am ${value.gender ?? "..."}",
+                              style: const TextStyle(
+                                fontSize: 22,
+                                color: Colors.white,
+                              ),
+                            );
+                          },
+                        )),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 30, 32, 34),
+                      ),
+                      child: Consumer<ProfileProvider>(
+                        builder: (context, value, child) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildGenderSelect(gender: "Men"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildGenderSelect(gender: "Women"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildGenderSelect(gender: "Other"),
+                            ],
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              buildMainCategory(
+                icon: Icons.language,
+                height: 500,
+                subcategoryname: provider.sexualOrientation == null
+                    ? "Add sexual Orintation"
+                    : "I am ${provider.sexualOrientation}",
+                title: "Sexual Orientation",
+                modalContent: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.only(top: 10, left: 15),
+                        child: Consumer<ProfileProvider>(
+                          builder: (context, value, child) {
+                            return Text(
+                              "I Am ${value.sexualOrientation ?? "..."}",
+                              style: const TextStyle(
+                                fontSize: 22,
+                                color: Colors.white,
+                              ),
+                            );
+                          },
+                        )),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 30, 32, 34),
+                      ),
+                      child: Consumer<ProfileProvider>(
+                        builder: (context, value, child) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildSexualOrientationSelect(sex: "Straight"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildSexualOrientationSelect(sex: "Lesbian"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildSexualOrientationSelect(sex: "Gay"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildSexualOrientationSelect(sex: "Bisexual"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildSexualOrientationSelect(sex: "Asexual"),
+                              const SizedBox(height: 5),
+                              const Divider(
+                                  color: Color.fromARGB(255, 66, 70, 75)),
+                              const SizedBox(height: 5),
+                              buildSexualOrientationSelect(sex: "Demisexual"),
+                              //   const SizedBox(height: 5),
+                              //   const Divider(
+                              //       color: Color.fromARGB(255, 66, 70, 75)),
+                              //   const SizedBox(height: 5),
+                              //   buildGenderSelect(gender: "Pansexual"),
+                              //   const SizedBox(height: 5),
+                              //   const Divider(
+                              //       color: Color.fromARGB(255, 66, 70, 75)),
+                              //   const SizedBox(height: 5),
+                              //   buildGenderSelect(gender: "Queer"),
+                              //   const SizedBox(height: 5),
+                              //   const Divider(
+                              //       color: Color.fromARGB(255, 66, 70, 75)),
+                              //   const SizedBox(height: 5),
+                              //   buildGenderSelect(gender: "Bicurios"),
+                              //   const SizedBox(height: 5),
+                              //   const Divider(
+                              //       color: Color.fromARGB(255, 66, 70, 75)),
+                              //   const SizedBox(height: 5),
+                              //   buildGenderSelect(gender: "Aromantic"),
+                            ],
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 5, top: 20, bottom: 5),
+                child: Text(
+                  "Basics",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 5, top: 20, bottom: 5),
-              child: Text(
-                "Ask me about",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 13),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(6)),
-                  color: Color.fromARGB(255, 19, 21, 23),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 5),
-                  child: Column(
-                    children: [
-                      buildAskMeAboutCategory(
-                          icon: Icons.travel_explore,
-                          subcategoryname: "Going Out",
-                          subcategory: provider.aboutMap["goingOut"]),
-                      const SizedBox(height: 25),
-                      buildAskMeAboutCategory(
-                          icon: Icons.weekend_rounded,
-                          subcategoryname: "My Weekends",
-                          subcategory: provider.aboutMap["myWeekends"]),
-                      const SizedBox(height: 25),
-                      buildAskMeAboutCategory(
-                          icon: Icons.contact_phone_rounded,
-                          subcategoryname: "Me + My Phone",
-                          subcategory: provider.aboutMap["meandmyphone"]),
-                      const SizedBox(height: 10),
-                    ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 13),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(6)),
+                    color: Color.fromARGB(255, 19, 21, 23),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 5),
+                    child: Column(
+                      children: [
+                        buildInsideSubCategory(
+                          icon: CupertinoIcons.moon_stars,
+                          subcategoryname: "Zodiac",
+                          subcategory: provider.basicsMap["zodiac"],
+                        ),
+                        const SizedBox(height: 25),
+                        buildInsideSubCategory(
+                          icon: Icons.menu_book_sharp,
+                          subcategoryname: "Education",
+                          subcategory: provider.basicsMap["eduction"],
+                        ),
+                        const SizedBox(height: 25),
+                        buildInsideSubCategory(
+                          icon: Icons.family_restroom,
+                          subcategoryname: "Family Plans",
+                          subcategory: provider.basicsMap["familyPlan"],
+                        ),
+                        const SizedBox(height: 25),
+                        buildInsideSubCategory(
+                          icon: Icons.medical_information,
+                          subcategoryname: "Covid Vaccine",
+                          subcategory: provider.basicsMap["covidVaccine"],
+                        ),
+                        const SizedBox(height: 25),
+                        buildInsideSubCategory(
+                          icon: Icons.tips_and_updates_rounded,
+                          subcategoryname: "Personality Type",
+                          subcategory: provider.basicsMap["personalityType"],
+                        ),
+                        const SizedBox(height: 25),
+                        buildInsideSubCategory(
+                          icon: Icons.add_call,
+                          subcategoryname: "Communication style",
+                          subcategory: provider.basicsMap["communication"],
+                        ),
+                        const SizedBox(height: 25),
+                        buildInsideSubCategory(
+                          icon: CupertinoIcons.heart,
+                          subcategoryname: "Love style",
+                          subcategory: provider.basicsMap["loveStyle"],
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            buildInfoInput(
-              title: "Job Title",
-              hintText: "Add job title",
-              controller: _jobTitleController
-                ..text = _jobTitleController.text.isEmpty
-                    ? provider.profile!.jobTitle ?? ""
-                    : _jobTitleController.text,
-            ),
-            buildInfoInput(
-              title: "Company",
-              hintText: "Add company",
-              controller: _companyController
-                ..text = _companyController.text.isEmpty
-                    ? provider.profile!.companyName ?? ""
-                    : _companyController.text,
-            ),
-            buildInfoInput(
-              title: "College",
-              hintText: "Add college",
-              controller: _collegeController
-                ..text = _collegeController.text.isEmpty
-                    ? provider.profile!.collageName ?? ""
-                    : _collegeController.text,
-            ),
-            buildInfoInput(
-              title: "Living in",
-              hintText: "Add city",
-              controller: _livinginController
-                ..text = _livinginController.text.isEmpty
-                    ? provider.profile!.liviningIn ?? ""
-                    : _livinginController.text,
-            ),
-            buildInfoInput(
-              title: "Instagram",
-              hintText: "Add instagram username",
-              controller: _instagramController
-                ..text = _instagramController.text.isEmpty
-                    ? provider.profile!.instagranId ?? ""
-                    : _instagramController.text,
-            ),
-          ],
-        ),
-      )),
+              const Padding(
+                padding: EdgeInsets.only(left: 5, top: 20, bottom: 5),
+                child: Text(
+                  "Lifestyle",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 13),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(6)),
+                    color: Color.fromARGB(255, 19, 21, 23),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 5),
+                    child: Column(
+                      children: [
+                        buildLifeStyleCategory(
+                          icon: Icons.pets_outlined,
+                          subcategoryname: "Pets",
+                          subcategory: provider.lifestyleMap["pets"],
+                        ),
+                        const SizedBox(height: 25),
+                        buildLifeStyleCategory(
+                            icon: Icons.blender_outlined,
+                            subcategoryname: "Drinking",
+                            subcategory: provider.lifestyleMap["drinking"]),
+                        const SizedBox(height: 25),
+                        buildLifeStyleCategory(
+                            icon: Icons.smoking_rooms,
+                            subcategoryname: "Smoking",
+                            subcategory: provider.lifestyleMap["smoking"]),
+                        const SizedBox(height: 25),
+                        buildLifeStyleCategory(
+                            icon: Icons.sports_gymnastics,
+                            subcategoryname: "Workout",
+                            subcategory: provider.lifestyleMap["workout"]),
+                        const SizedBox(height: 25),
+                        buildLifeStyleCategory(
+                            icon: Icons.local_pizza_outlined,
+                            subcategoryname: "Dietary Preference",
+                            subcategory:
+                                provider.lifestyleMap["dietaryPreference"]),
+                        const SizedBox(height: 25),
+                        buildLifeStyleCategory(
+                            icon: CupertinoIcons.at,
+                            subcategoryname: "Social Media",
+                            subcategory: provider.lifestyleMap["socialMedia"]),
+                        const SizedBox(height: 25),
+                        buildLifeStyleCategory(
+                            icon: CupertinoIcons.bed_double,
+                            subcategoryname: "Sleeping Habits",
+                            subcategory:
+                                provider.lifestyleMap["sleepingHabits"]),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 5, top: 20, bottom: 5),
+                child: Text(
+                  "Ask me about",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 13),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(6)),
+                    color: Color.fromARGB(255, 19, 21, 23),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 5),
+                    child: Column(
+                      children: [
+                        buildAskMeAboutCategory(
+                            icon: Icons.travel_explore,
+                            subcategoryname: "Going Out",
+                            subcategory: provider.aboutMap["goingOut"]),
+                        const SizedBox(height: 25),
+                        buildAskMeAboutCategory(
+                            icon: Icons.weekend_rounded,
+                            subcategoryname: "My Weekends",
+                            subcategory: provider.aboutMap["myWeekends"]),
+                        const SizedBox(height: 25),
+                        buildAskMeAboutCategory(
+                            icon: Icons.contact_phone_rounded,
+                            subcategoryname: "Me + My Phone",
+                            subcategory: provider.aboutMap["meandmyphone"]),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              buildInfoInput(
+                title: "Job Title",
+                hintText: "Add job title",
+                controller: _jobTitleController
+                  ..text = _jobTitleController.text.isEmpty
+                      ? provider.profile!.jobTitle ?? ""
+                      : _jobTitleController.text,
+              ),
+              buildInfoInput(
+                title: "Company",
+                hintText: "Add company",
+                controller: _companyController
+                  ..text = _companyController.text.isEmpty
+                      ? provider.profile!.companyName ?? ""
+                      : _companyController.text,
+              ),
+              buildInfoInput(
+                title: "College",
+                hintText: "Add college",
+                controller: _collegeController
+                  ..text = _collegeController.text.isEmpty
+                      ? provider.profile!.collageName ?? ""
+                      : _collegeController.text,
+              ),
+              buildInfoInput(
+                title: "Living in",
+                hintText: "Add city",
+                controller: _livinginController
+                  ..text = _livinginController.text.isEmpty
+                      ? provider.profile!.liviningIn ?? ""
+                      : _livinginController.text,
+              ),
+              buildInfoInput(
+                title: "Instagram",
+                hintText: "Add instagram username",
+                controller: _instagramController
+                  ..text = _instagramController.text.isEmpty
+                      ? provider.profile!.instagranId ?? ""
+                      : _instagramController.text,
+              ),
+            ],
+          ),
+        )),
+      ),
     );
   }
 
@@ -1040,6 +1051,48 @@ class _EditProfileState extends State<EditProfile> {
               child: const Center(
                   child: Icon(
                 Icons.add,
+                color: Colors.white,
+              )),
+            ))
+      ],
+    );
+  }
+
+  Widget buildWithImage({required String image}) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Container(
+          margin: const EdgeInsets.all(6),
+          height: double.infinity,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 119, 129, 139),
+            borderRadius: BorderRadius.circular(7),
+          ),
+          child: SizedBox(
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(7),
+                child: CachedNetworkImage(imageUrl: image, fit: BoxFit.cover)),
+          ),
+        ),
+        Positioned(
+            bottom: 0,
+            right: 0,
+            child: Container(
+              height: 30,
+              width: 30,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.grey, Colors.blueGrey]),
+                color: Colors.grey,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Center(
+                  child: Icon(
+                CupertinoIcons.multiply,
                 color: Colors.white,
               )),
             ))

@@ -85,57 +85,61 @@ class _VivavoxCardState extends State<VivavoxCard> {
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: Hero(
-                    tag: widget.profile.id,
-                    child: CachedNetworkImage(
-                      imageUrl: widget.profile.profileimage ?? "",
-                      placeholder: (context, url) {
-                        return Shimmer(
-                          gradient: const LinearGradient(
-                            colors: [
-                              Color.fromARGB(255, 26, 26, 28),
-                              Color.fromARGB(255, 23, 23, 23),
-                              Color.fromARGB(255, 17, 17, 18),
-                            ],
-                            stops: [
-                              0.1,
-                              0.3,
-                              0.4,
-                            ],
-                            begin: Alignment(-1.0, -0.3),
-                            end: Alignment(1.0, 0.3),
-                            tileMode: TileMode.clamp,
-                          ),
-                          child: Container(
-                            color: Colors.red,
-                          ),
-                        );
-                      },
-                      errorWidget: (context, url, error) {
-                        return Container(
-                          color: Colors.black,
-                          child: const Center(
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                Icon(
-                                  Icons.error,
-                                  color: Colors.red,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "Image loading error",
-                                  style: TextStyle(color: Colors.white),
-                                )
-                              ])),
-                        );
-                      },
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      fit: BoxFit.cover,
+                  child: Container(
+                    color: Colors.red,
+                    child: Hero(
+                      tag: widget.profile.id,
+                      child: CachedNetworkImage(
+                        imageUrl: widget.profile.profileimage ?? "",
+                        placeholder: (context, url) {
+                          return Shimmer(
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 26, 26, 28),
+                                Color.fromARGB(255, 23, 23, 23),
+                                Color.fromARGB(255, 17, 17, 18),
+                              ],
+                              stops: [
+                                0.1,
+                                0.3,
+                                0.4,
+                              ],
+                              begin: Alignment(-1.0, -0.3),
+                              end: Alignment(1.0, 0.3),
+                              tileMode: TileMode.clamp,
+                            ),
+                            child: Container(
+                              color: Colors.red,
+                            ),
+                          );
+                        },
+                        errorWidget: (context, url, error) {
+                          return Container(
+                            color: Colors.black,
+                            child: const Center(
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                  Icon(
+                                    Icons.error,
+                                    color: Colors.red,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "Image loading error",
+                                    style: TextStyle(color: Colors.white),
+                                  )
+                                ])),
+                          );
+                        },
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -211,17 +215,19 @@ class _VivavoxCardState extends State<VivavoxCard> {
                         ),
                       ),
                       RichText(
-                        text: const TextSpan(
+                        text: TextSpan(
                           children: [
-                            WidgetSpan(
+                            const WidgetSpan(
                               child: Icon(
                                 CupertinoIcons.location_solid,
                                 color: Colors.white,
                                 size: 16,
                               ),
                             ),
-                            TextSpan(text: " "),
-                            TextSpan(text: "21 miles away"),
+                            const TextSpan(text: " "),
+                            TextSpan(
+                                text: widget.profile.liviningIn ??
+                                    "21 miles away"),
                           ],
                         ),
                       ),

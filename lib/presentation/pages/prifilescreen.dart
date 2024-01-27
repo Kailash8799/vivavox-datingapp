@@ -1,29 +1,28 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vivavox/presentation/pages/editprofile.dart';
 import 'package:vivavox/presentation/pages/notfound.dart';
-import 'package:vivavox/services/model/profileinfo.dart';
+import 'package:vivavox/presentation/providers/profileprovider.dart';
+import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 
-class UserProfileDetailScreen extends StatefulWidget {
-  const UserProfileDetailScreen({super.key});
+class OwnProfileScreen extends StatefulWidget {
+  const OwnProfileScreen({super.key});
 
   @override
-  State<UserProfileDetailScreen> createState() => _UserProfileDetailScreen();
+  State<OwnProfileScreen> createState() => _OwnProfileScreen();
 }
 
-class _UserProfileDetailScreen extends State<UserProfileDetailScreen> {
+class _OwnProfileScreen extends State<OwnProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    final routeinfo = ModalRoute.of(context)!.settings.arguments;
-    if (routeinfo == null) {
+    final provider = Provider.of<ProfileProvider>(context);
+    if (provider.profile == null) {
       return const NotFound();
     }
-    final data = routeinfo as Map;
-    if (data["profile"] == null) {
-      return const NotFound();
-    }
-    final profiledetail = data["profile"] as Profileinfo;
-    final keytag = data["keytag"];
+    final profiledetail = provider.profile;
+    final keytag = profiledetail!.id;
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -31,6 +30,35 @@ class _UserProfileDetailScreen extends State<UserProfileDetailScreen> {
         surfaceTintColor: Colors.transparent,
         toolbarHeight: 0,
       ),
+      floatingActionButton: (provider.profile!.email == profiledetail.email &&
+              provider.profile!.id == profiledetail.id)
+          ? TextButton(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                    side: const BorderSide(width: 1),
+                    borderRadius: BorderRadius.circular(100)),
+                maximumSize: const Size(60, 60),
+                minimumSize: const Size(60, 60),
+                backgroundColor: const Color(0xFFFE3C72),
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  AnimationTransition(
+                    pageBuilder: (context, animation, secondaryAnimation) {
+                      return const EditProfile();
+                    },
+                    opaque: false,
+                  ),
+                );
+              },
+              child: const Center(
+                  child: Icon(
+                Icons.edit,
+                color: Colors.white,
+                size: 26,
+              )),
+            )
+          : const SizedBox(),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -46,12 +74,10 @@ class _UserProfileDetailScreen extends State<UserProfileDetailScreen> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              TextSpan(
-                text: profiledetail.birthdate == null
-                    ? ""
-                    : profiledetail.birthdate.toString(),
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              const TextSpan(text: ", ", style: TextStyle(fontSize: 30)),
+              const TextSpan(
+                text: "20",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               )
             ])),
             titleSpacing: 10,
@@ -115,6 +141,16 @@ class _UserProfileDetailScreen extends State<UserProfileDetailScreen> {
               ),
             ),
           ),
+          // SliverList.builder(
+          //   itemCount: 10,
+          //   itemBuilder: (context, index) {
+          //     return buildList(
+          //       icon: CupertinoIcons.search,
+          //       title: "Looking for",
+          //       desc: "❤️ Short time fun",
+          //     );
+          //   },
+          // ),
           SliverToBoxAdapter(
             child: profiledetail.relationshipGoal == null &&
                     profiledetail.relationshipType == null
@@ -163,7 +199,7 @@ class _UserProfileDetailScreen extends State<UserProfileDetailScreen> {
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
-                        profiledetail.relationshipType != null &&
+                        profiledetail.relationshipGoal != null &&
                                 profiledetail.relationshipType != null
                             ? const Divider(
                                 color: Color.fromARGB(255, 36, 40, 44),
@@ -184,163 +220,6 @@ class _UserProfileDetailScreen extends State<UserProfileDetailScreen> {
                                 backgroundColor:
                                     const Color.fromARGB(255, 30, 33, 36),
                               ),
-                      ],
-                    ),
-                  ),
-          ),
-          SliverToBoxAdapter(
-            child: profiledetail.aboutme == null ||
-                    profiledetail.aboutme!.isEmpty
-                ? const SizedBox()
-                : Container(
-                    margin: const EdgeInsets.only(top: 10, left: 8, right: 8),
-                    padding: const EdgeInsets.all(15),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      color: const Color.fromARGB(255, 19, 21, 23),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        RichText(
-                          text: const TextSpan(
-                            children: [
-                              WidgetSpan(
-                                  child: Icon(
-                                Icons.format_quote,
-                                color: Color.fromARGB(255, 133, 138, 142),
-                                size: 17,
-                              )),
-                              TextSpan(text: "  "),
-                              TextSpan(
-                                text: "About me",
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 133, 138, 142),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        profiledetail.aboutme == null
-                            ? const SizedBox(height: 0)
-                            : Text(
-                                profiledetail.aboutme ?? "",
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                      ],
-                    ),
-                  ),
-          ),
-          SliverToBoxAdapter(
-            child: profiledetail.relationshipGoal == null &&
-                    profiledetail.relationshipType == null
-                ? const SizedBox()
-                : Container(
-                    margin: const EdgeInsets.only(top: 10, left: 8, right: 8),
-                    padding: const EdgeInsets.all(15),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      color: const Color.fromARGB(255, 19, 21, 23),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        RichText(
-                          text: const TextSpan(
-                            children: [
-                              WidgetSpan(
-                                  child: Icon(
-                                CupertinoIcons.person_crop_square_fill,
-                                color: Color.fromARGB(255, 133, 138, 142),
-                                size: 17,
-                              )),
-                              TextSpan(text: "  "),
-                              TextSpan(
-                                text: "Essentials",
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 133, 138, 142),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        profiledetail.liviningIn == null
-                            ? const SizedBox(height: 0)
-                            : builsEssentials(
-                                icon: Icons.location_on_outlined,
-                                item: profiledetail.liviningIn ?? ""),
-                        profiledetail.height != null
-                            ? const Divider(
-                                color: Color.fromARGB(255, 36, 40, 44),
-                              )
-                            : const SizedBox(height: 0),
-                        profiledetail.height == null
-                            ? const SizedBox(height: 0)
-                            : builsEssentials(
-                                icon: Icons.list,
-                                item: "${profiledetail.height} cm",
-                              ),
-                        profiledetail.jobTitle != null
-                            ? const Divider(
-                                color: Color.fromARGB(255, 36, 40, 44),
-                              )
-                            : const SizedBox(height: 0),
-                        profiledetail.jobTitle == null
-                            ? const SizedBox(height: 0)
-                            : builsEssentials(
-                                icon: Icons.list,
-                                item:
-                                    "${profiledetail.jobTitle} ${profiledetail.companyName == null ? "" : "at ${profiledetail.companyName}"}",
-                              ),
-                        profiledetail.collageName != null
-                            ? const Divider(
-                                color: Color.fromARGB(255, 36, 40, 44),
-                              )
-                            : const SizedBox(height: 0),
-                        profiledetail.collageName == null
-                            ? const SizedBox(height: 0)
-                            : builsEssentials(
-                                icon: Icons.list,
-                                item: profiledetail.collageName ?? "",
-                              ),
-                        profiledetail.sexualOrientation != null
-                            ? const Divider(
-                                color: Color.fromARGB(255, 36, 40, 44),
-                              )
-                            : const SizedBox(height: 0),
-                        profiledetail.sexualOrientation == null
-                            ? const SizedBox(height: 0)
-                            : builsEssentials(
-                                icon: Icons.list,
-                                item: "${profiledetail.sexualOrientation}",
-                              ),
-                        profiledetail.language != null &&
-                                profiledetail.language!.isNotEmpty
-                            ? const Divider(
-                                color: Color.fromARGB(255, 36, 40, 44),
-                              )
-                            : const SizedBox(height: 0),
-                        profiledetail.language != null &&
-                                profiledetail.language!.isNotEmpty
-                            ? builsEssentials(
-                                icon: Icons.list,
-                                item: "${profiledetail.language}",
-                              )
-                            : const SizedBox(height: 0),
                       ],
                     ),
                   ),
@@ -444,29 +323,6 @@ class _UserProfileDetailScreen extends State<UserProfileDetailScreen> {
       );
     }
     return const SizedBox();
-  }
-
-  Widget builsEssentials({required IconData icon, required String item}) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: const Color.fromARGB(255, 133, 138, 142),
-          size: 17,
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            item,
-            style: const TextStyle(
-              fontSize: 17,
-              color: Colors.white,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   Widget buildListInside() {

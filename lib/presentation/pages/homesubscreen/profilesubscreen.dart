@@ -1,11 +1,10 @@
-import 'dart:math';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:vivavox/presentation/pages/prifilescreen.dart';
 import 'package:vivavox/presentation/pages/splashscreen.dart';
-import 'package:vivavox/presentation/pages/userprofiledetails.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
 import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 import 'package:vivavox/services/auth/auth.dart';
@@ -19,9 +18,6 @@ class ProfilesubScreen extends StatefulWidget {
 
 class _ProfilesubScreenState extends State<ProfilesubScreen> {
   // DocumentSnapshot? user;
-  final String _profileImage =
-      "https://avatars.githubusercontent.com/u/98249911?s=400&u=d567c4ef70777250a8315f745ffe2b60e3b55537&v=4";
-
   @override
   void initState() {
     super.initState();
@@ -48,38 +44,39 @@ class _ProfilesubScreenState extends State<ProfilesubScreen> {
                       backgroundColor: Colors.white10,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: Image.network(
-                            width: 150, height: 150, fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress != null) {
-                            return SizedBox(
-                              height: 150.0,
-                              child: Shimmer.fromColors(
-                                baseColor: Colors.white10,
-                                highlightColor: Colors.grey,
-                                child: Container(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  color: Colors.transparent,
+                        child: CachedNetworkImage(
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) {
+                              return SizedBox(
+                                height: 150.0,
+                                child: Shimmer.fromColors(
+                                  baseColor: Colors.white10,
+                                  highlightColor: Colors.grey,
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    color: Colors.transparent,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }
-                          return child;
-                        }, errorBuilder: (context, error, stackTrace) {
-                          return SizedBox(
-                            height: 150.0,
-                            child: Shimmer.fromColors(
-                              baseColor: Colors.white10,
-                              highlightColor: Colors.grey,
-                              child: Container(
-                                width: double.infinity,
-                                height: double.infinity,
-                                color: Colors.white10,
-                              ),
-                            ),
-                          );
-                        }, _profileImage),
+                              );
+                            },
+                            errorWidget: (context, url, error) {
+                              return SizedBox(
+                                height: 150.0,
+                                child: Shimmer.fromColors(
+                                  baseColor: Colors.white10,
+                                  highlightColor: Colors.grey,
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    color: Colors.white10,
+                                  ),
+                                ),
+                              );
+                            },
+                            imageUrl: provider.profile!.profileimage ?? ""),
                       ),
                     ),
                     Positioned(
@@ -95,16 +92,9 @@ class _ProfilesubScreenState extends State<ProfilesubScreen> {
                               AnimationTransition(
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) {
-                                  return const UserProfileDetailScreen();
+                                  return const OwnProfileScreen();
                                 },
                                 opaque: false,
-                                settings: RouteSettings(
-                                  arguments: {
-                                    "profile": provider.profile,
-                                    "keytag": provider.profile?.id ??
-                                        Random().toString()
-                                  },
-                                ),
                               ),
                             );
                           },

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:vivavox/services/model/profileinfo.dart';
 
@@ -13,9 +11,9 @@ class ProfileProvider extends ChangeNotifier {
   String? _relationshipType;
   List<String> _language = [];
   List<String> _images = [];
-  Basics? _basics = Basics.fromJson(null);
-  Lifestyle? _lifeStyle = Lifestyle.fromJson(null);
-  About? _askMeAbout = About.fromJson(null);
+  // Basics? _basics = Basics.fromJson(null);
+  // Lifestyle? _lifeStyle = Lifestyle.fromJson(null);
+  // About? _askMeAbout = About.fromJson(null);
   String? _sexualOrientation;
   bool _profileUpdating = false;
   Map<String, dynamic> _basicsMap = {};
@@ -30,9 +28,9 @@ class ProfileProvider extends ChangeNotifier {
   String? get relationshipType => _relationshipType;
   List<String>? get language => _language;
   List<String>? get images => _images;
-  Basics? get basics => _basics;
-  Lifestyle? get lifeStyle => _lifeStyle;
-  About? get askMeAbout => _askMeAbout;
+  // Basics? get basics => _basics;
+  // Lifestyle? get lifeStyle => _lifeStyle;
+  // About? get askMeAbout => _askMeAbout;
   String? get sexualOrientation => _sexualOrientation;
   bool get profileupdating => _profileUpdating;
   Map<String, dynamic> get basicsMap => _basicsMap;
@@ -46,19 +44,41 @@ class ProfileProvider extends ChangeNotifier {
     _gender = profileinfo.gender;
     _location = profileinfo.location;
     _interest = profileinfo.interest;
-    _askMeAbout = profileinfo.askMeAbout;
+    // _askMeAbout = profileinfo.askMeAbout;
     _basicsMap = profileinfo.basics!.toJson();
     _aboutMap = profileinfo.askMeAbout!.toJson();
     _lifestyleMap = profileinfo.lifeStyle!.toJson();
-    _basics = profileinfo.basics;
+    // _basics = profileinfo.basics;
     _relationshipGoal = profileinfo.relationshipGoal;
     _relationshipType = profileinfo.relationshipType;
     _height = profileinfo.height;
-    _language = profileinfo.language ?? [];
-    _images = profileinfo.images ?? [];
+    _language =
+        profileinfo.language == null ? [] : List.from(profileinfo.language!);
+    _images = profileinfo.images == null ? [] : List.from(profileinfo.images!);
     _sexualOrientation = profileinfo.sexualOrientation;
-    _lifeStyle = profileinfo.lifeStyle;
+    // _lifeStyle = profileinfo.lifeStyle;
     notifyListeners();
+  }
+
+  void resetProfile() {
+    _gender = _profileinfo!.gender;
+    _location = _profileinfo!.location;
+    _interest = _profileinfo!.interest;
+    // _askMeAbout = _profileinfo!.askMeAbout;
+    _basicsMap = _profileinfo!.basics!.toJson();
+    _aboutMap = _profileinfo!.askMeAbout!.toJson();
+    _lifestyleMap = _profileinfo!.lifeStyle!.toJson();
+    // _basics = _profileinfo!.basics;
+    _relationshipGoal = _profileinfo!.relationshipGoal;
+    _relationshipType = _profileinfo!.relationshipType;
+    _height = _profileinfo!.height;
+    _language = _profileinfo!.language == null
+        ? []
+        : List.from(_profileinfo!.language!);
+    _images =
+        _profileinfo!.images == null ? [] : List.from(_profileinfo!.images!);
+    _sexualOrientation = _profileinfo!.sexualOrientation;
+    // _lifeStyle = _profileinfo!.lifeStyle;
   }
 
   void addGender({required String? value, required bool isSelected}) {
@@ -152,20 +172,20 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addBasics({required Basics? basics}) {
-    _basics = basics;
-    notifyListeners();
-  }
+  // void addBasics({required Basics? basics}) {
+  //   _basics = basics;
+  //   notifyListeners();
+  // }
 
-  void addLifeStyle({required Lifestyle? lifeStyle}) {
-    _lifeStyle = lifeStyle;
-    notifyListeners();
-  }
+  // void addLifeStyle({required Lifestyle? lifeStyle}) {
+  //   _lifeStyle = lifeStyle;
+  //   notifyListeners();
+  // }
 
-  void addAskMeAbout({required About? askMeAbout}) {
-    _askMeAbout = askMeAbout;
-    notifyListeners();
-  }
+  // void addAskMeAbout({required About? askMeAbout}) {
+  //   _askMeAbout = askMeAbout;
+  //   notifyListeners();
+  // }
 
   void addSexualOrientation(
       {required String? sexualOrientation, required bool isSelected}) {

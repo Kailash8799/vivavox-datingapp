@@ -200,8 +200,6 @@ class AnimationTransition extends PageRouteBuilder {
         },
       );
     }
-
-    // No animation (e.g., when the route is not pushed or popped)
     return child;
   }
 }
