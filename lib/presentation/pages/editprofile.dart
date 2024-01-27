@@ -1899,7 +1899,7 @@ class _EditProfileState extends State<EditProfile> {
                 const Row(
                   children: [
                     Icon(
-                      CupertinoIcons.moon_stars,
+                      Icons.travel_explore,
                       color: Colors.white,
                     ),
                     SizedBox(
@@ -1930,7 +1930,7 @@ class _EditProfileState extends State<EditProfile> {
                 const Row(
                   children: [
                     Icon(
-                      Icons.menu_book_sharp,
+                      Icons.weekend_rounded,
                       color: Colors.white,
                     ),
                     SizedBox(
@@ -1962,7 +1962,7 @@ class _EditProfileState extends State<EditProfile> {
                 const Row(
                   children: [
                     Icon(
-                      Icons.family_restroom,
+                      Icons.contact_phone_rounded,
                       color: Colors.white,
                     ),
                     SizedBox(
