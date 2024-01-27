@@ -216,6 +216,58 @@ class _OwnProfileScreen extends State<OwnProfileScreen> {
                   ),
           ),
           SliverToBoxAdapter(
+            child: profiledetail.aboutme == null ||
+                    profiledetail.aboutme!.isEmpty
+                ? const SizedBox()
+                : Container(
+                    margin: const EdgeInsets.only(top: 10, left: 8, right: 8),
+                    padding: const EdgeInsets.all(15),
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      color: const Color.fromARGB(255, 19, 21, 23),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RichText(
+                          text: const TextSpan(
+                            children: [
+                              WidgetSpan(
+                                  child: Icon(
+                                Icons.format_quote,
+                                color: Color.fromARGB(255, 133, 138, 142),
+                                size: 17,
+                              )),
+                              TextSpan(text: "  "),
+                              TextSpan(
+                                text: "About me",
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 133, 138, 142),
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        profiledetail.aboutme == null
+                            ? const SizedBox(height: 0)
+                            : Text(
+                                profiledetail.aboutme ?? "",
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                      ],
+                    ),
+                  ),
+          ),
+          SliverToBoxAdapter(
             child: profiledetail.liviningIn == null &&
                     profiledetail.height == null &&
                     profiledetail.jobTitle == null &&
