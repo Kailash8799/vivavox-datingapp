@@ -3,6 +3,8 @@ import 'package:vivavox/services/model/profileinfo.dart';
 
 class ProfileProvider extends ChangeNotifier {
   Profileinfo? _profileinfo;
+  final String _defaultimage =
+      "https://res.cloudinary.com/dyyonlqge/image/upload/v1706454456/vivavox/knzpqiu08ji9xufljp3m.png";
   String? _gender;
   String? _location;
   String? _interest;
@@ -20,6 +22,7 @@ class ProfileProvider extends ChangeNotifier {
   Map<String, dynamic> _lifestyleMap = {};
   Map<String, dynamic> _aboutMap = {};
 
+  String get defaultimage => _defaultimage;
   String? get gender => _gender;
   String? get location => _location;
   String? get interest => _interest;

@@ -86,7 +86,7 @@ class _VivavoxCardState extends State<VivavoxCard> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
-                    color: Colors.red,
+                    color: Colors.black,
                     child: Hero(
                       tag: widget.profile.id,
                       child: CachedNetworkImage(
@@ -109,7 +109,7 @@ class _VivavoxCardState extends State<VivavoxCard> {
                               tileMode: TileMode.clamp,
                             ),
                             child: Container(
-                              color: Colors.red,
+                              color: Colors.black,
                             ),
                           );
                         },

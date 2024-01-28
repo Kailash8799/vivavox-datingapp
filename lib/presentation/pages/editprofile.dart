@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
+import 'package:vivavox/presentation/widgets/editprofile/media/addmedia.dart';
+import 'package:vivavox/presentation/widgets/editprofile/media/media.dart';
 import 'package:vivavox/services/auth/auth.dart';
 import 'package:vivavox/services/model/profileinfo.dart';
 
@@ -217,9 +219,9 @@ class _EditProfileState extends State<EditProfile> {
                   childAspectRatio: 2 / 3,
                 ),
                 itemBuilder: (context, index) {
-                  return provider.images!.isEmpty
-                      ? buildWithOutImage()
-                      : buildWithImage(image: provider.images![0]);
+                  return provider.images!.length > index
+                      ? MediaEditProfile(image: provider.images![index])
+                      : const AddMediaEditProfile();
                 },
               ),
               const Padding(
@@ -1016,86 +1018,6 @@ class _EditProfileState extends State<EditProfile> {
             ),
           ),
         ),
-      ],
-    );
-  }
-
-  Widget buildWithOutImage() {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Container(
-          margin: const EdgeInsets.all(6),
-          height: double.infinity,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 119, 129, 139),
-            borderRadius: BorderRadius.circular(7),
-          ),
-          child: const SizedBox(),
-        ),
-        Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              height: 30,
-              width: 30,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.pink, Colors.red, Color(0xFFFE3C72)]),
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Center(
-                  child: Icon(
-                Icons.add,
-                color: Colors.white,
-              )),
-            ))
-      ],
-    );
-  }
-
-  Widget buildWithImage({required String image}) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Container(
-          margin: const EdgeInsets.all(6),
-          height: double.infinity,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 119, 129, 139),
-            borderRadius: BorderRadius.circular(7),
-          ),
-          child: SizedBox(
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(7),
-                child: CachedNetworkImage(imageUrl: image, fit: BoxFit.cover)),
-          ),
-        ),
-        Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              height: 30,
-              width: 30,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.grey, Colors.blueGrey]),
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Center(
-                  child: Icon(
-                CupertinoIcons.multiply,
-                color: Colors.white,
-              )),
-            ))
       ],
     );
   }

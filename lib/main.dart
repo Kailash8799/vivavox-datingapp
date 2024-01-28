@@ -4,6 +4,7 @@ import 'package:vivavox/config/theme/theme.dart';
 import 'package:vivavox/presentation/pages/landingpage.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
+import 'package:vivavox/presentation/providers/statusprovider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,12 +16,14 @@ Future<void> main() async {
       ChangeNotifierProvider(
         create: (context) => ProfileProvider(),
       ),
+      ChangeNotifierProvider(
+        create: (context) => StatusProvider(),
+      ),
     ],
     builder: (context, child) {
       return const MyApp();
     },
   ));
-  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

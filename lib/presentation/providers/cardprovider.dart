@@ -30,7 +30,7 @@ class CardProvider extends ChangeNotifier {
   //   initialize();
   // }
 
-  void setMail({required email}) {
+  void setMail({required String email}) {
     _email = email;
   }
 
@@ -199,19 +199,7 @@ class CardProvider extends ChangeNotifier {
     }
   }
 
-  void userProfiles() async {
-    // _assetImages = <String>[
-    //   'https://images.unsplash.com/photo-1631947430066-48c30d57b943?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fGJlYXV0aWZ1bCUyMGdpcmx8ZW58MHx8MHx8fDA%3D',
-    //   'https://images.unsplash.com/photo-1631204286910-cdf207d2e75b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGhvdCUyMGJpa2luaXxlbnwwfHwwfHx8MA%3D%3D',
-    //   'https://images.unsplash.com/photo-1631204286856-a77f37bdce63?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTh8fGhvdCUyMGJpa2luaXxlbnwwfHwwfHx8MA%3D%3D',
-    //   'https://images.unsplash.com/photo-1582639590011-f5a8416d1101?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90JTIwYmlraW5pfGVufDB8fDB8fHww',
-    //   'https://images.unsplash.com/photo-1568819317551-31051b37f69f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aG90JTIwYmlraW5pfGVufDB8fDB8fHww',
-    //   'https://images.unsplash.com/photo-1581588636584-5c447d2c9d97?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aG90JTIwYmlraW5pfGVufDB8fDB8fHww',
-    //   'https://images.unsplash.com/photo-1594590438588-aadc19454cb0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aG90JTIwYmlraW5pfGVufDB8fDB8fHww',
-    //   'https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGhvdCUyMGJpa2luaXxlbnwwfHwwfHx8MA%3D%3D',
-    //   'https://images.unsplash.com/photo-1544963151-fb47c1a06478?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGhvdCUyMGJpa2luaXxlbnwwfHwwfHx8MA%3D%3D',
-    //   'https://images.unsplash.com/flagged/photo-1555992938-f45411cc33fd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGhvdCUyMGJpa2luaXxlbnwwfHwwfHx8MA%3D%3D',
-    //   'https://images.unsplash.com/photo-1630568321790-65edcc51b544?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGhvdCUyMGdpcmxzfGVufDB8fDB8fHww'
-    // ].toList();
+  void resetProfiles() async {
+    _profileDetails.removeRange(0, _profileDetails.length);
   }
 }

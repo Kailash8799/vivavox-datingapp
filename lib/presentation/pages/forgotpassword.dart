@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vivavox/presentation/pages/loginscreen.dart';
 import 'package:vivavox/presentation/widgets/snakbar.dart';
 import 'package:vivavox/services/auth/auth.dart';
 
