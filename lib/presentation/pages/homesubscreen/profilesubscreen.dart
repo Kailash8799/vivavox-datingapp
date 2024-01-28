@@ -39,8 +39,8 @@ class _ProfilesubScreenState extends State<ProfilesubScreen> {
                     child: Stack(
                   children: [
                     CircleAvatar(
-                      minRadius: 75,
-                      maxRadius: 75,
+                      minRadius: 100,
+                      maxRadius: 100,
                       backgroundColor: Colors.white10,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),

@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom"
-
 const Home = () => {
   return (
-    <div className="bg-red-500">
-      <Link to={"verifyemail"}>Verify</Link>
+    <div className="bg-[url('/bg.svg')] h-dvh items-center justify-center flex">
+      <div className="bg-[#FE3C72] inline-block p-3 rounded-lg">
+        <a href="../../assets/app.apk" download={true} className="text-white font-bold">Download App</a>
+      </div>
     </div>
   )
 }
