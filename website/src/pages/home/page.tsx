@@ -1,7 +1,10 @@
+import { Link } from "react-router-dom"
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div className="bg-red-500">
+      <Link to={"verifyemail"}>Verify</Link>
+    </div>
   )
 }
 
