@@ -1,9 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
+import 'package:vivavox/presentation/widgets/editprofile/header/header.dart';
 import 'package:vivavox/presentation/widgets/editprofile/media/addmedia.dart';
 import 'package:vivavox/presentation/widgets/editprofile/media/media.dart';
 import 'package:vivavox/services/auth/auth.dart';
@@ -53,7 +54,18 @@ class _EditProfileState extends State<EditProfile> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final provider = Provider.of<ProfileProvider>(context, listen: false);
       final provider2 = Provider.of<CardProvider>(context, listen: false);
-      if (provider.profileupdating) return;
+      if (provider.profileupdating) {
+        Fluttertoast.showToast(
+          msg: "Profile updating in progress",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        return;
+      }
       provider.setUpdatingValue(true);
       try {
         if (provider.profile != null) {
@@ -87,16 +99,54 @@ class _EditProfileState extends State<EditProfile> {
             Map<String, dynamic> data = profile["profiledata"];
             Map<String, dynamic> res = await AuthUser()
                 .updateProfile(email: provider2.email, profiledata: data);
+
             if (res["success"]) {
               provider.addProfile(
                   profileinfo: Profileinfo.fromJson(res["profile"]));
+              Fluttertoast.showToast(
+                msg: res["message"],
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0,
+              );
             } else {
               debugPrint('$res');
+              Fluttertoast.showToast(
+                msg: res["message"],
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0,
+              );
             }
-          } else {}
+          } else {
+            Fluttertoast.showToast(
+              msg: "Some error occurred!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+          }
         }
       } catch (e) {
         debugPrint(e.toString());
+        Fluttertoast.showToast(
+          msg: "Some error occurred!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       }
       provider.setUpdatingValue(false);
     });
@@ -114,85 +164,7 @@ class _EditProfileState extends State<EditProfile> {
         provider.resetProfile();
       },
       child: Scaffold(
-        appBar: AppBar(
-          surfaceTintColor: Colors.transparent,
-          title: RichText(
-              text: const TextSpan(children: [
-            TextSpan(
-              text: "Edit Profile",
-              style: TextStyle(
-                fontSize: 25,
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ])),
-          titleSpacing: 10,
-          leading: const SizedBox(),
-          leadingWidth: 0,
-          actions: [
-            provider.profileupdating
-                ? Container(
-                    height: 35,
-                    width: 35,
-                    margin: const EdgeInsets.only(right: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: const LinearGradient(
-                          colors: [Colors.orange, Colors.pink, Colors.red],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          stops: [0, 0.5, 0.7]),
-                    ),
-                    padding: const EdgeInsets.all(4),
-                    child: const CupertinoActivityIndicator(
-                      color: Colors.white,
-                    ),
-                  )
-                : IconButton(
-                    onPressed: updateProfile,
-                    icon: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: const LinearGradient(
-                            colors: [Colors.orange, Colors.pink, Colors.red],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            stops: [0, 0.5, 0.7]),
-                      ),
-                      padding: const EdgeInsets.all(4),
-                      child: const Icon(
-                        Icons.save,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  gradient: const LinearGradient(
-                      colors: [Colors.orange, Colors.pink, Colors.red],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      stops: [0, 0.5, 0.7]),
-                ),
-                padding: const EdgeInsets.all(4),
-                child: const Icon(
-                  CupertinoIcons.down_arrow,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-          // backgroundColor: const Color.fromARGB(113, 107, 102, 107),
-
-          // backgroundColor: Color(0xFF23272A),
-          backgroundColor: Colors.black,
-        ),
+        appBar: appbar(context: context, updateProfile: updateProfile),
         body: SingleChildScrollView(
             child: Padding(
           padding: const EdgeInsets.only(left: 7, right: 7, bottom: 20),
@@ -240,7 +212,7 @@ class _EditProfileState extends State<EditProfile> {
                 child: TextFormField(
                   controller: _aboutController
                     ..text = _aboutController.text.isEmpty
-                        ? provider.profile!.aboutme ?? ""
+                        ? (provider.profile!.aboutme ?? "")
                         : _aboutController.text,
                   maxLines: 4,
                   maxLength: 300,

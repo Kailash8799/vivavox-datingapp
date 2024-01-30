@@ -15,6 +15,7 @@ import 'package:vivavox/presentation/providers/statusprovider.dart';
 import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 import 'package:vivavox/services/auth/auth.dart';
 import 'package:vivavox/services/model/profileinfo.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ProfilesubScreen extends StatefulWidget {
   const ProfilesubScreen({super.key});
@@ -24,7 +25,6 @@ class ProfilesubScreen extends StatefulWidget {
 }
 
 class _ProfilesubScreenState extends State<ProfilesubScreen> {
-  final ImagePicker _picker = ImagePicker();
   File? _imagefile;
 
   @override
@@ -35,21 +35,53 @@ class _ProfilesubScreenState extends State<ProfilesubScreen> {
   Future<void> pickPhoto() async {
     final per = await Permission.photos.request();
     if (per.isGranted) {
-      final file = await _picker.pickImage(source: ImageSource.gallery);
-      if (file == null) return;
+      final ImagePicker picker = ImagePicker();
+      final xFile = await picker.pickImage(source: ImageSource.gallery);
+      if (xFile == null) return;
+      File file = File(xFile.path);
+      int fileSizeInBytes = file.lengthSync();
+      double fileSizeInKB = fileSizeInBytes / 1024;
+      if (fileSizeInKB > 3500) {
+        Fluttertoast.showToast(
+          msg: "Maximum image size is 3.4MB",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        return;
+      }
       setState(() {
-        _imagefile = File(file.path);
+        _imagefile = file;
       });
     }
   }
 
   Future<void> pickFromCamera() async {
-    final per = await Permission.camera.request();
+    final per = await Permission.photos.request();
     if (per.isGranted) {
-      final file = await _picker.pickImage(source: ImageSource.camera);
-      if (file == null) return;
+      final ImagePicker picker = ImagePicker();
+      final xFile = await picker.pickImage(source: ImageSource.camera);
+      if (xFile == null) return;
+      File file = File(xFile.path);
+      int fileSizeInBytes = file.lengthSync();
+      double fileSizeInKB = fileSizeInBytes / 1024;
+      if (fileSizeInKB > 3500) {
+        Fluttertoast.showToast(
+          msg: "Maximum image size is 3.4MB",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        return;
+      }
       setState(() {
-        _imagefile = File(file.path);
+        _imagefile = file;
       });
     }
   }
@@ -75,9 +107,37 @@ class _ProfilesubScreenState extends State<ProfilesubScreen> {
         setState(() {
           _imagefile = null;
         });
-      } else {}
+        Fluttertoast.showToast(
+          msg: data["message"],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: data["message"],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
     } catch (e) {
       debugPrint(e.toString());
+      Fluttertoast.showToast(
+        msg: "Some error occurred!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
     statusprovider.setProfileimageupdating(status: false);
   }
@@ -87,11 +147,32 @@ class _ProfilesubScreenState extends State<ProfilesubScreen> {
     final profileprovider =
         Provider.of<ProfileProvider>(context, listen: false);
     if (provider.email.isEmpty ||
-        profileprovider.profile!.profileimage == null) {
+        profileprovider.profile!.profileimage == null ||
+        profileprovider.profile!.profileimage == profileprovider.defaultimage) {
+      Fluttertoast.showToast(
+        msg: "No image to delete",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
       return;
     }
     final statusprovider = Provider.of<StatusProvider>(context, listen: false);
-    if (statusprovider.profileimageupdating) return;
+    if (statusprovider.profileimageupdating) {
+      Fluttertoast.showToast(
+        msg: "Image updating in process",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return;
+    }
     try {
       statusprovider.setProfileimageupdating(status: true);
       Map<String, dynamic> data = await AuthUser().deleteProfileImage(
@@ -101,9 +182,37 @@ class _ProfilesubScreenState extends State<ProfilesubScreen> {
       if (data["success"]) {
         profileprovider.addProfile(
             profileinfo: Profileinfo.fromJson(data["profile"]));
-      } else {}
+        Fluttertoast.showToast(
+          msg: data["message"],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: data["message"],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
     } catch (e) {
       debugPrint(e.toString());
+      Fluttertoast.showToast(
+        msg: "Some error occurred!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
     setState(() {
       _imagefile = null;

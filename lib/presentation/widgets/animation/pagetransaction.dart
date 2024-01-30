@@ -138,9 +138,6 @@ class AnimationTransition extends PageRouteBuilder {
   });
 
   @override
-  bool get opaque => false;
-
-  @override
   Widget buildTransitions(
     BuildContext context,
     Animation<double> animation,

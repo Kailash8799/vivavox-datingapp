@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
@@ -29,7 +30,18 @@ class _MediaEditProfileState extends State<MediaEditProfile> {
       return;
     }
     final statusprovider = Provider.of<StatusProvider>(context, listen: false);
-    if (statusprovider.imageaddingdeleting) return;
+    if (statusprovider.imageaddingdeleting) {
+      Fluttertoast.showToast(
+        msg: "Image uploading in progress",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return;
+    }
     try {
       statusprovider.setImageDeleting(status: true);
       setState(() {
@@ -40,9 +52,38 @@ class _MediaEditProfileState extends State<MediaEditProfile> {
       if (res["success"]) {
         profileprovider.addProfile(
             profileinfo: Profileinfo.fromJson(res["profile"]));
-      } else {}
+        Fluttertoast.showToast(
+          msg: "Image deleted successfully!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: res["message"],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
     } catch (e) {
       debugPrint('$e');
+      Fluttertoast.showToast(
+        msg: "Some error occurred!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return;
     }
     setState(() {
       deleting = false;
