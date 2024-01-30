@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:vivavox/presentation/pages/chatroom.dart';
 import 'package:vivavox/presentation/widgets/animation/pageroute/slideanimation.dart';
 
@@ -48,7 +49,7 @@ class UserChatComp extends StatelessWidget {
                 backgroundColor: const Color.fromARGB(255, 19, 21, 23),
                 surfaceTintColor: Colors.transparent,
                 title: const Text(
-                  "Are you sure you want to delete the account?",
+                  "Are you sure you want to delete this contact?",
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
                 actions: [
@@ -91,8 +92,42 @@ class UserChatComp extends StatelessWidget {
             minRadius: 30,
             child: profileimage.isEmpty
                 ? const SizedBox()
-                : CachedNetworkImage(
-                    imageUrl: profileimage,
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: CachedNetworkImage(
+                      imageUrl: profileimage,
+                      fit: BoxFit.cover,
+                      height: 60,
+                      width: 60,
+                      placeholder: (context, url) {
+                        return SizedBox(
+                          height: 60.0,
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.white10,
+                            highlightColor: Colors.grey,
+                            child: Container(
+                              width: double.infinity,
+                              height: double.infinity,
+                              color: Colors.transparent,
+                            ),
+                          ),
+                        );
+                      },
+                      errorWidget: (context, url, error) {
+                        return SizedBox(
+                          height: 60.0,
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.white10,
+                            highlightColor: Colors.grey,
+                            child: Container(
+                              width: double.infinity,
+                              height: double.infinity,
+                              color: Colors.white10,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
           ),
           trailing: Text(

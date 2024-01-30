@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 ThemeData theme = ThemeData(
   useMaterial3: true,
   colorScheme: const ColorScheme(
-    brightness: Brightness.light,
+    brightness: Brightness.dark,
     background: Colors.black,
     error: Colors.red,
     onBackground: Colors.white,

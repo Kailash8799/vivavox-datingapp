@@ -28,6 +28,9 @@ class Profileinfo {
   final String? premiumtype;
   final DateTime? premiumstartdate;
   final DateTime? premiumenddate;
+  List<Likes>? likes = [];
+  List<Likes>? remotelikes = [];
+  List<String>? allswipe = [];
 
   Profileinfo({
     required this.id,
@@ -59,6 +62,9 @@ class Profileinfo {
     this.premiumuser = false,
     this.images,
     this.profileimage,
+    this.likes,
+    this.remotelikes,
+    this.allswipe,
   });
 
   factory Profileinfo.fromJson(Map<String, dynamic> json) {
@@ -106,8 +112,15 @@ class Profileinfo {
           ? null
           : json["premiumstartdate"] as DateTime,
       images: List<String>.from(json['images'].map((x) => x)),
+      allswipe: List<String>.from(json['allswipe'].map((x) => x.toString())),
       profileimage:
           json["profileimage"] == null ? null : json["profileimage"] as String,
+      likes: json["likes"] == null
+          ? []
+          : List<Likes>.from(json["likes"].map((x) => Likes.fromJson(x))),
+      remotelikes: json["remotelikes"] == null
+          ? []
+          : List<Likes>.from(json["remotelikes"].map((x) => Likes.fromJson(x))),
     );
   }
   Map<String, dynamic> toJson() => {
@@ -139,6 +152,69 @@ class Profileinfo {
         "premiumenddate": premiumenddate,
         "premiumstartdate": premiumstartdate,
         "images": List<dynamic>.from(images!.map((x) => x)),
+        "profileimage": profileimage,
+      };
+}
+
+class Likes {
+  final LikesUser user;
+  final bool isSuperlike;
+
+  Likes({required this.user, required this.isSuperlike});
+
+  factory Likes.fromJson(Map<String, dynamic> json) {
+    return Likes(
+      user: LikesUser.fromJson(json["user"]),
+      isSuperlike: json["isSuperlike"],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "user": user.toJson(),
+        "isSuperlike": isSuperlike,
+      };
+}
+
+class LikesUser {
+  final String? id;
+  final String? username;
+  final String? email;
+  final bool? premiumuser;
+  final String? profileimage;
+
+  LikesUser({
+    this.id,
+    this.username,
+    this.email,
+    this.premiumuser,
+    this.profileimage,
+  });
+
+  factory LikesUser.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return LikesUser(
+        id: null,
+        username: null,
+        email: null,
+        premiumuser: null,
+        profileimage: null,
+      );
+    }
+    return LikesUser(
+      id: json["_id"] == null ? null : json["_id"] as String,
+      username: json["username"] == null ? null : json["username"] as String,
+      email: json["email"] == null ? null : json["email"] as String,
+      premiumuser:
+          json["premiumuser"] == null ? null : json["premiumuser"] as bool,
+      profileimage:
+          json["profileimage"] == null ? null : json["profileimage"] as String,
+    );
+  }
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "username": username,
+        "email": email,
+        "premiumuser": premiumuser,
         "profileimage": profileimage,
       };
 }

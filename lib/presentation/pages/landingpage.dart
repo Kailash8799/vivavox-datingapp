@@ -55,7 +55,9 @@ class _LandingScreenState extends State<LandingScreen> {
         final cardprovider = Provider.of<CardProvider>(context, listen: false);
         provider.addProfile(
             profileinfo: Profileinfo.fromJson(responce["profile"]));
-        cardprovider.setMail(email: responce["profile"]["email"] as String);
+        cardprovider.setMail(
+            email: responce["profile"]["email"] as String,
+            swipes: responce["profile"]["allswipe"] ?? []);
         cardprovider.initialize();
         transferScreen(isLogin: true);
       } else {
@@ -63,6 +65,7 @@ class _LandingScreenState extends State<LandingScreen> {
         transferScreen(isLogin: false);
       }
     } catch (e) {
+      print(e);
       final SharedPreferences status = await SharedPreferences.getInstance();
       await status.remove("auth_token");
       transferScreen(isLogin: false);

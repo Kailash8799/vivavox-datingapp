@@ -85,6 +85,7 @@ class AuthUser {
 
   Future<Map<String, dynamic>> getAllProfile({
     required String email,
+    List<dynamic>? swiped,
   }) async {
     try {
       final res = await http.post(
@@ -92,7 +93,7 @@ class AuthUser {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{'email': email}),
+        body: jsonEncode(<String, dynamic>{'email': email, 'allswipe': swiped}),
       );
       Map<String, dynamic> data =
           jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;

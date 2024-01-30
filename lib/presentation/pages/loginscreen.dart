@@ -54,11 +54,12 @@ class _LoginScreenState extends State<LoginScreen> {
               Provider.of<ProfileProvider>(context, listen: false);
           final cardprovider =
               Provider.of<CardProvider>(context, listen: false);
-          cardprovider.setMail(email: responce["profile"]["email"]);
-          cardprovider.initialize();
+          cardprovider.setMail(
+              email: responce["profile"]["email"],
+              swipes: responce["profile"]["allswipe"] ?? []);
           profileprovider.addProfile(
               profileinfo: Profileinfo.fromJson(responce["profile"]));
-
+          cardprovider.initialize();
           Navigator.of(context).pushAndRemoveUntil(
               AnimationTransition(
                 pageBuilder: (context, animation, secondaryAnimation) {
@@ -74,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         }
       } catch (e) {
+        debugPrint(e.toString());
         SnakbarComp.showSnackBar(
           context,
           "Some error accured!",

@@ -223,9 +223,6 @@ class _ProfilesubScreenState extends State<ProfilesubScreen> {
   @override
   void dispose() {
     super.dispose();
-    setState(() {
-      _imagefile = null;
-    });
   }
 
   @override
@@ -694,7 +691,7 @@ class _ProfilesubScreenState extends State<ProfilesubScreen> {
                                 Map<String, dynamic> res =
                                     await AuthUser().logOut();
                                 if (res["success"]) {
-                                  cardprovider.setMail(email: "");
+                                  cardprovider.setMail(email: "", swipes: []);
                                   cardprovider.resetProfiles();
                                   if (!context.mounted) return;
                                   Navigator.of(context).pop();

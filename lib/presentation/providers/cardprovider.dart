@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:vivavox/services/auth/auth.dart';
+import 'package:vivavox/services/auth/likeservice.dart';
 import 'package:vivavox/services/model/profileinfo.dart';
 
 enum CardStatus { like, dislike, superlike }
@@ -8,6 +9,7 @@ enum CardStatus { like, dislike, superlike }
 class CardProvider extends ChangeNotifier {
   final List<Profileinfo> _profileDetails = [];
   String _email = "";
+  List<dynamic> _allswipe = [];
   int _profilefetchcount = 0;
   bool _profilefetching = false;
   bool _isDragging = false;
@@ -26,12 +28,14 @@ class CardProvider extends ChangeNotifier {
   Offset get position => _position;
   double get angle => _angle;
   String get email => _email;
+  List<dynamic> get allswipe => _allswipe;
   // CardProvider() {
   //   initialize();
   // }
 
-  void setMail({required String email}) {
+  void setMail({required String email, required List<dynamic> swipes}) {
     _email = email;
+    _allswipe = swipes;
   }
 
   void setScreenSize(Size screenSize) => _screenSize = screenSize;
@@ -145,6 +149,11 @@ class CardProvider extends ChangeNotifier {
   void dislike() {
     _angle = -20;
     _position -= Offset(2 * _screenSize.width, 0);
+    LikeService().dislikeUser(
+      id: _profileDetails.last.id,
+      email: _email,
+      remoteemail: _profileDetails.last.email,
+    );
     _nextProfile();
     notifyListeners();
   }
@@ -152,6 +161,12 @@ class CardProvider extends ChangeNotifier {
   void like() {
     _angle = 20;
     _position += Offset(2 * _screenSize.width, 0);
+    LikeService().likeUser(
+      id: _profileDetails.last.id,
+      email: _email,
+      issuperlike: false,
+      remoteemail: _profileDetails.last.email,
+    );
     _nextProfile();
     notifyListeners();
   }
@@ -159,6 +174,12 @@ class CardProvider extends ChangeNotifier {
   void superlike() {
     _angle = 0;
     _position -= Offset(0, 2 * _screenSize.height);
+    LikeService().likeUser(
+      id: _profileDetails.last.id,
+      email: _email,
+      issuperlike: true,
+      remoteemail: _profileDetails.last.email,
+    );
     _nextProfile();
     notifyListeners();
   }
@@ -180,7 +201,7 @@ class CardProvider extends ChangeNotifier {
         _profilefetching = true;
         notifyListeners();
         Map<String, dynamic> res =
-            await AuthUser().getAllProfile(email: _email);
+            await AuthUser().getAllProfile(email: _email, swiped: _allswipe);
         if (res["success"]) {
           List<dynamic> dynamicProfileList = res["profile"];
           List<Profileinfo> profileList = dynamicProfileList
@@ -194,6 +215,7 @@ class CardProvider extends ChangeNotifier {
         }
       }
     } catch (e) {
+      debugPrint(e.toString());
       _profilefetching = false;
       notifyListeners();
     }

@@ -37,14 +37,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Vivavox',
       theme: theme,
+      darkTheme: theme,
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       initialRoute: "/",
       routes: {
         "/": (context) => const LandingScreen(),
         "/chatroom": (context) => const ChatRoom(),
       },
       onGenerateRoute: (settings) {
+        print(settings.name);
         switch (settings.name) {
           case "chatroom":
             return AnimationTransition(
