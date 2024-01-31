@@ -5,6 +5,7 @@ import 'package:vivavox/presentation/pages/chatroom.dart';
 import 'package:vivavox/presentation/pages/landingpage.dart';
 import 'package:vivavox/presentation/pages/notfound.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
+import 'package:vivavox/presentation/providers/chatprovider.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
 import 'package:vivavox/presentation/providers/statusprovider.dart';
 import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
@@ -21,6 +22,9 @@ Future<void> main() async {
       ),
       ChangeNotifierProvider(
         create: (context) => StatusProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => ChatProvider(),
       ),
     ],
     builder: (context, child) {

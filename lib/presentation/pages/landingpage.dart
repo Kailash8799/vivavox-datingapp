@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vivavox/presentation/pages/homescreen.dart';
 import 'package:vivavox/presentation/pages/splashscreen.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
+import 'package:vivavox/presentation/providers/chatprovider.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
 import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 import 'package:vivavox/services/auth/auth.dart';
@@ -53,12 +54,14 @@ class _LandingScreenState extends State<LandingScreen> {
         if (!context.mounted) return;
         final provider = Provider.of<ProfileProvider>(context, listen: false);
         final cardprovider = Provider.of<CardProvider>(context, listen: false);
+        final chatprovider = Provider.of<ChatProvider>(context, listen: false);
         provider.addProfile(
             profileinfo: Profileinfo.fromJson(responce["profile"]));
         cardprovider.setMail(
             email: responce["profile"]["email"] as String,
             swipes: responce["profile"]["allswipe"] ?? []);
         cardprovider.initialize();
+        chatprovider.setAllChats(email: responce["profile"]["email"] as String);
         transferScreen(isLogin: true);
       } else {
         await status.remove("auth_token");

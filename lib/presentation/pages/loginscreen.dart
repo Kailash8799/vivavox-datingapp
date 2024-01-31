@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vivavox/presentation/pages/forgotpassword.dart';
 import 'package:vivavox/presentation/pages/homescreen.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
+import 'package:vivavox/presentation/providers/chatprovider.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
 import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 import 'package:vivavox/presentation/widgets/snakbar.dart';
@@ -54,12 +55,18 @@ class _LoginScreenState extends State<LoginScreen> {
               Provider.of<ProfileProvider>(context, listen: false);
           final cardprovider =
               Provider.of<CardProvider>(context, listen: false);
+
+          final chatprovider =
+              Provider.of<ChatProvider>(context, listen: false);
           cardprovider.setMail(
               email: responce["profile"]["email"],
               swipes: responce["profile"]["allswipe"] ?? []);
           profileprovider.addProfile(
               profileinfo: Profileinfo.fromJson(responce["profile"]));
           cardprovider.initialize();
+
+          chatprovider.setAllChats(
+              email: responce["profile"]["email"] as String);
           Navigator.of(context).pushAndRemoveUntil(
               AnimationTransition(
                 pageBuilder: (context, animation, secondaryAnimation) {

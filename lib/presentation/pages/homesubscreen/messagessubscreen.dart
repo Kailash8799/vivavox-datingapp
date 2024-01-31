@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vivavox/presentation/pages/selectchat.dart';
+import 'package:vivavox/presentation/providers/chatprovider.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
 import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 import 'package:vivavox/presentation/widgets/chat/userchat_comp.dart';
-import 'package:vivavox/services/model/profileinfo.dart';
+import 'package:vivavox/presentation/widgets/date_time_extension.dart';
 
 class MessagesubScreen extends StatefulWidget {
   const MessagesubScreen({super.key});
@@ -15,16 +16,15 @@ class MessagesubScreen extends StatefulWidget {
 
 class _MessagesubScreenState extends State<MessagesubScreen> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final chatprovider = Provider.of<ChatProvider>(context);
     final profileprovider = Provider.of<ProfileProvider>(context);
-    List<LikesUser> profile = [];
-    profileprovider.profile!.likes!.forEach((element) {
-      profileprovider.profile!.likes!.forEach((element2) {
-        if (element.user.id == element2.user.id) {
-          profile.add(element.user);
-        }
-      });
-    });
+    print(chatprovider.allchats);
     return Scaffold(
       floatingActionButton: TextButton(
         style: ElevatedButton.styleFrom(
@@ -52,24 +52,40 @@ class _MessagesubScreenState extends State<MessagesubScreen> {
           size: 26,
         )),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: profile.length,
-              itemBuilder: (context, index) {
-                return UserChatComp(
-                  lastmessage: "Hello janu",
-                  lastmessagetime: "12:05 AM",
-                  userid: profile[index].id!,
-                  usernmae: profile[index].username!,
-                  profileimage: profile[index].profileimage!,
-                );
-              },
+      body: profileprovider.profile == null
+          ? const Center(
+              child: Text(
+                "No chat found",
+                style: TextStyle(color: Colors.white, fontSize: 23),
+              ),
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.only(bottom: 10, top: 5),
+                    itemCount: chatprovider.allchats.length,
+                    itemBuilder: (context, index) {
+                      final remoteuser = profileprovider.profile!.id ==
+                              chatprovider.allchats[index].user1.id
+                          ? chatprovider.allchats[index].user2
+                          : chatprovider.allchats[index].user1;
+                      return UserChatComp(
+                        chatid: chatprovider.allchats[index].chatid,
+                        lastmessage:
+                            chatprovider.allchats[index].latestMessage?.message,
+                        lastmessagetime: chatprovider
+                            .allchats[index].latestMessage?.messagetime
+                            .timeAgo(numericDates: false),
+                        userid: remoteuser.id!,
+                        usernmae: remoteuser.username!,
+                        profileimage: remoteuser.profileimage!,
+                      );
+                    },
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ),
     );
   }
 }

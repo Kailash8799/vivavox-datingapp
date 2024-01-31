@@ -1,5 +1,13 @@
 import 'dart:ui' as ui;
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vivavox/presentation/pages/notfound.dart';
+import 'package:vivavox/presentation/providers/chatprovider.dart';
+import 'package:vivavox/presentation/providers/profileprovider.dart';
+import 'package:vivavox/presentation/widgets/date_time_extension.dart';
+import 'package:vivavox/services/model/chatinfo_model.dart';
 
 @immutable
 class ChatRoom extends StatefulWidget {
@@ -10,12 +18,18 @@ class ChatRoom extends StatefulWidget {
 }
 
 class _ChatRoomState extends State<ChatRoom> {
-  List<Message> data = [];
   final TextEditingController _chatController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final chatd = ModalRoute.of(context)!.settings.arguments;
+      final chatdata = chatd as Map;
+      final chatid = chatdata["chatid"] as String;
+      final provider = Provider.of<ChatProvider>(context, listen: false);
+      provider.fetchPreviousChat(chatid: chatid);
+    });
   }
 
   @override
@@ -24,15 +38,18 @@ class _ChatRoomState extends State<ChatRoom> {
     _chatController.dispose();
   }
 
-  void sendMessage() async {
+  void sendMessage({required String senderid, required String chatid}) async {
+    final chatProvider = Provider.of<ChatProvider>(context, listen: false);
     if (_chatController.text.trim().isEmpty) return;
-    setState(() {
-      data.insert(
-        0,
-        Message(owner: MessageOwner.myself, text: _chatController.text.trim()),
-      );
-      _chatController.clear();
-    });
+    Map<String, dynamic> message = {
+      "_id": "123",
+      "chat": chatid,
+      "sender": senderid,
+      "message": _chatController.text.trim(),
+      "createdAt": DateTime.now(),
+    };
+    chatProvider.addChat(messgaejson: message);
+    _chatController.clear();
   }
 
   // final DecorationTween _tween = DecorationTween(
@@ -62,6 +79,17 @@ class _ChatRoomState extends State<ChatRoom> {
 
   @override
   Widget build(BuildContext context) {
+    final chatd = ModalRoute.of(context)!.settings.arguments;
+    final chatprovider = Provider.of<ChatProvider>(context);
+    final profileprovider =
+        Provider.of<ProfileProvider>(context, listen: false);
+
+    if (chatd == null) {
+      return const NotFound();
+    }
+
+    final chatdata = chatd as Map;
+    final chatid = chatdata["chatid"] as String;
     return Theme(
       data: ThemeData(
         brightness: Brightness.dark,
@@ -110,29 +138,36 @@ class _ChatRoomState extends State<ChatRoom> {
           title: InkWell(
             overlayColor: const MaterialStatePropertyAll(Colors.transparent),
             onTap: () {},
-            child: const Row(
+            child: Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: Color.fromARGB(255, 24, 25, 26),
+                  backgroundColor: const Color.fromARGB(255, 24, 25, 26),
                   maxRadius: 23,
                   minRadius: 23,
-                  // child: profileimage.isEmpty
-                  //     ? const SizedBox()
-                  //     : CachedNetworkImage(
-                  //         imageUrl: profileimage,
-                  //       ),
+                  child: chatdata["remoteprofile"]["profileimage"] == null
+                      ? const SizedBox()
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(46),
+                          child: CachedNetworkImage(
+                            width: 46,
+                            height: 46,
+                            fit: BoxFit.cover,
+                            imageUrl: chatdata["remoteprofile"]["profileimage"],
+                          ),
+                        ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         overflow: TextOverflow.ellipsis,
-                        "Kailash Rajput here studfdgf fgf skfg gdfjg bv",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        chatdata["remoteprofile"]["usernmae"] as String,
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 18),
                       ),
-                      Text(
+                      const Text(
                         overflow: TextOverflow.ellipsis,
                         "Online",
                         style: TextStyle(color: Colors.white, fontSize: 15),
@@ -150,12 +185,12 @@ class _ChatRoomState extends State<ChatRoom> {
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 reverse: true,
-                itemCount: data.length,
+                itemCount: chatprovider.chatmessages.length,
                 itemBuilder: (context, index) {
-                  final message = data[index];
+                  final message = chatprovider.chatmessages[index];
                   return MessageBubble(
                     message: message,
-                    child: Text(message.text),
+                    child: Text(message.message),
                   );
                   // return Expanded(
                   //   child: CupertinoContextMenu.builder(
@@ -221,7 +256,12 @@ class _ChatRoomState extends State<ChatRoom> {
                       ),
                     ),
                     IconButton(
-                      onPressed: sendMessage,
+                      onPressed: () {
+                        sendMessage(
+                          senderid: profileprovider.profile!.id,
+                          chatid: chatid,
+                        );
+                      },
                       icon: Center(
                         child: Container(
                           decoration: BoxDecoration(
@@ -237,16 +277,24 @@ class _ChatRoomState extends State<ChatRoom> {
                                 stops: [0, 0.5, 0.7]),
                           ),
                           padding: const EdgeInsets.all(2),
-                          child: const Padding(
-                            padding: EdgeInsets.all(4.0),
-                            child: Icon(
-                              IconData(
-                                0xe571,
-                                fontFamily: 'MaterialIcons',
-                                matchTextDirection: true,
-                              ),
-                              color: Colors.white,
-                            ),
+                          child: Consumer<ChatProvider>(
+                            builder: (context, value, child) {
+                              return Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: value.messageadding
+                                    ? const CupertinoActivityIndicator(
+                                        radius: 12,
+                                      )
+                                    : const Icon(
+                                        IconData(
+                                          0xe571,
+                                          fontFamily: 'MaterialIcons',
+                                          matchTextDirection: true,
+                                        ),
+                                        color: Colors.white,
+                                      ),
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -270,13 +318,16 @@ class MessageBubble extends StatelessWidget {
     required this.child,
   });
 
-  final Message message;
+  final Messagemodel message;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final messageAlignment =
-        message.isMine ? Alignment.topLeft : Alignment.topRight;
+    final profileprovider =
+        Provider.of<ProfileProvider>(context, listen: false);
+
+    bool isMine = message.senderid != profileprovider.profile!.id;
+    final messageAlignment = isMine ? Alignment.topLeft : Alignment.topRight;
 
     return FractionallySizedBox(
       alignment: messageAlignment,
@@ -289,7 +340,7 @@ class MessageBubble extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(16.0)),
             child: BubbleBackground(
               colors: [
-                if (message.isMine) ...const [
+                if (isMine) ...const [
                   Color(0xFF6C7689),
                   Color(0xFF3A364B),
                 ] else ...const [
@@ -306,13 +357,14 @@ class MessageBubble extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5),
                   child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         child,
-                        const Text(
-                          "Today",
-                          style:
-                              TextStyle(fontSize: 10, color: Colors.blueGrey),
+                        Text(
+                          message.messagetime.timeAgo(numericDates: false),
+                          style: const TextStyle(
+                              fontSize: 10,
+                              color: ui.Color.fromARGB(255, 125, 154, 169)),
                         )
                       ]),
                 ),

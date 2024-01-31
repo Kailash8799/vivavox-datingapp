@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
 import 'package:vivavox/presentation/providers/statusprovider.dart';
+import 'package:vivavox/presentation/widgets/snakbar.dart';
 import 'package:vivavox/services/chat/chat_service.dart';
 
 class SelectChatComp extends StatefulWidget {
@@ -37,9 +39,38 @@ class _SelectChatCompState extends State<SelectChatComp> {
         email: cardprovider.email,
         remoteemail: widget.remoteemail,
       );
-
-      print(responce);
-    } catch (e) {}
+      if (responce["success"]) {
+        Fluttertoast.showToast(
+          msg: responce["message"],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: responce["message"],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: "Some error occurred!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
     statusprovider.setChatcreating(status: false);
     return true;
   }

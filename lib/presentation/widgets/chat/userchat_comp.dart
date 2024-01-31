@@ -6,19 +6,21 @@ import 'package:vivavox/presentation/pages/chatroom.dart';
 import 'package:vivavox/presentation/widgets/animation/pageroute/slideanimation.dart';
 
 class UserChatComp extends StatelessWidget {
-  final String lastmessagetime;
+  final String? lastmessagetime;
   final String usernmae;
   final String userid;
-  final String lastmessage;
+  final String? lastmessage;
   final String profileimage;
+  final String chatid;
 
   const UserChatComp({
     super.key,
-    required this.lastmessage,
-    required this.lastmessagetime,
+    this.lastmessage,
+    this.lastmessagetime,
     required this.userid,
     required this.usernmae,
     required this.profileimage,
+    required this.chatid,
   });
 
   @override
@@ -29,11 +31,18 @@ class UserChatComp extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           SlideTransitionRoute(
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return const ChatRoom();
-            },
-            opaque: true,
-          ),
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return const ChatRoom();
+              },
+              opaque: true,
+              settings: RouteSettings(arguments: {
+                "chatid": chatid,
+                "remoteprofile": {
+                  "userid": userid,
+                  "usernmae": usernmae,
+                  "profileimage": profileimage,
+                }
+              })),
         );
       },
       child: Dismissible(
@@ -131,7 +140,7 @@ class UserChatComp extends StatelessWidget {
                   ),
           ),
           trailing: Text(
-            lastmessagetime,
+            lastmessagetime ?? "",
             style: const TextStyle(color: Colors.white, fontSize: 14),
           ),
           title: Text(
@@ -139,10 +148,12 @@ class UserChatComp extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(color: Colors.white),
           ),
-          subtitle: Text(
-            lastmessage,
-            style: const TextStyle(color: Colors.red),
-          ),
+          subtitle: lastmessage == null
+              ? const SizedBox(height: 0, width: 0)
+              : Text(
+                  lastmessage ?? "",
+                  style: const TextStyle(color: Colors.red),
+                ),
         ),
       ),
     );
