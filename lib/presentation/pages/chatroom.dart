@@ -2,12 +2,16 @@ import 'dart:ui' as ui;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+// import 'package:vivavox/presentation/pages/call.dart';
 import 'package:vivavox/presentation/pages/notfound.dart';
 import 'package:vivavox/presentation/providers/chatprovider.dart';
 import 'package:vivavox/presentation/providers/profileprovider.dart';
+// import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 import 'package:vivavox/presentation/widgets/date_time_extension.dart';
 import 'package:vivavox/services/model/chatinfo_model.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 @immutable
 class ChatRoom extends StatefulWidget {
@@ -19,6 +23,8 @@ class ChatRoom extends StatefulWidget {
 
 class _ChatRoomState extends State<ChatRoom> {
   final TextEditingController _chatController = TextEditingController();
+  late IO.Socket socket;
+  String? roomId;
 
   @override
   void initState() {
@@ -27,28 +33,77 @@ class _ChatRoomState extends State<ChatRoom> {
       final chatd = ModalRoute.of(context)!.settings.arguments;
       final chatdata = chatd as Map;
       final chatid = chatdata["chatid"] as String;
+      setState(() {
+        roomId = chatid;
+      });
       final provider = Provider.of<ChatProvider>(context, listen: false);
       provider.fetchPreviousChat(chatid: chatid);
+      connectSocket(chatid);
     });
+  }
+
+  void connectSocket(String roomId) {
+    try {
+      socket = IO.io(
+          'http://192.168.8.207:3000',
+          IO.OptionBuilder()
+              .setTransports(['websocket']) // for Flutter or Dart VM
+              .disableAutoConnect() // optional
+              .build());
+      socket.connect();
+      socket.onConnect((data) => {socket.emit("join room", roomId)});
+      socket.on("new message", newMessage);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void newMessage(data) {
+    final chatProvider = Provider.of<ChatProvider>(context, listen: false);
+    chatProvider.addRemoteChat(newmessage: data);
+    print(data);
+  }
+
+  void dispoceConnection() {
+    socket.disconnect();
   }
 
   @override
   void dispose() {
     super.dispose();
+    dispoceConnection();
     _chatController.dispose();
   }
 
   void sendMessage({required String senderid, required String chatid}) async {
-    final chatProvider = Provider.of<ChatProvider>(context, listen: false);
-    if (_chatController.text.trim().isEmpty) return;
-    Map<String, dynamic> message = {
-      "_id": "123",
-      "chat": chatid,
-      "sender": senderid,
-      "message": _chatController.text.trim(),
-      "createdAt": DateTime.now(),
-    };
-    chatProvider.addChat(messgaejson: message);
+    try {
+      final chatProvider = Provider.of<ChatProvider>(context, listen: false);
+      if (_chatController.text.trim().isEmpty) return;
+      Map<String, dynamic> message = {
+        "_id": "123",
+        "chat": chatid,
+        "sender": senderid,
+        "message": _chatController.text.trim(),
+        "createdAt": DateTime.now(),
+      };
+      Map<String, dynamic> res =
+          await chatProvider.addChat(messgaejson: message);
+      if (res["success"]) {
+        Map<String, dynamic> message2 = {
+          "_id": res["id"].toString(),
+          "chat": chatid,
+          "sender": senderid,
+          "message": _chatController.text.trim(),
+          "createdAt": DateTime.now().toIso8601String(),
+        };
+        if (socket.connected && roomId != null) {
+          socket.emit("new message", {"roomId": roomId, "message": message2});
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
     _chatController.clear();
   }
 
@@ -83,7 +138,6 @@ class _ChatRoomState extends State<ChatRoom> {
     final chatprovider = Provider.of<ChatProvider>(context);
     final profileprovider =
         Provider.of<ProfileProvider>(context, listen: false);
-
     if (chatd == null) {
       return const NotFound();
     }
@@ -98,6 +152,18 @@ class _ChatRoomState extends State<ChatRoom> {
       child: Scaffold(
         appBar: AppBar(
           actions: [
+            IconButton(
+                onPressed: () {
+                  // Navigator.of(context).push(
+                  //   AnimationTransition(
+                  //     pageBuilder: (context, animation, secondaryAnimation) {
+                  //       return const CallScreen();
+                  //     },
+                  //     opaque: false,
+                  //   ),
+                  // );
+                },
+                icon: const Icon(Icons.videocam_rounded)),
             PopupMenuButton(
               position: PopupMenuPosition.under,
               splashRadius: 100,
@@ -182,47 +248,53 @@ class _ChatRoomState extends State<ChatRoom> {
         body: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                reverse: true,
-                itemCount: chatprovider.chatmessages.length,
-                itemBuilder: (context, index) {
-                  final message = chatprovider.chatmessages[index];
-                  return MessageBubble(
-                    message: message,
-                    child: Text(message.message),
-                  );
-                  // return Expanded(
-                  //   child: CupertinoContextMenu.builder(
-                  //     actions: [
-                  //       CupertinoContextMenuAction(
-                  //         onPressed: () {
-                  //           Navigator.pop(context);
-                  //         },
-                  //         isDefaultAction: true,
-                  //         trailingIcon: CupertinoIcons.doc_on_clipboard_fill,
-                  //         child: const Text('Copy'),
-                  //       ),
-                  //     ],
-                  //     builder:
-                  //         (BuildContext context, Animation<double> animation) {
-                  //       final Animation<Decoration> boxDecorationAnimation =
-                  //           _boxDecorationAnimation(animation);
-                  //       return Container(
-                  //         decoration: animation.value <
-                  //                 CupertinoContextMenu.animationOpensAt
-                  //             ? boxDecorationAnimation.value
-                  //             : null,
-                  //         child: MessageBubble(
-                  //           message: message,
-                  //           child: Text(message.text),
-                  //         ),
-                  //       );
-                  //     },
-                  //   ),
-                  // );
-                },
-              ),
+              child: chatprovider.chatmessagefetching
+                  ? const CupertinoActivityIndicator(radius: 20)
+                  : chatprovider.chatmessages.isEmpty
+                      ? const Center(
+                          child: Text("No such messages"),
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          reverse: true,
+                          itemCount: chatprovider.chatmessages.length,
+                          itemBuilder: (context, index) {
+                            final message = chatprovider.chatmessages[index];
+                            return MessageBubble(
+                              message: message,
+                              child: Text(message.message),
+                            );
+                            // return Expanded(
+                            //   child: CupertinoContextMenu.builder(
+                            //     actions: [
+                            //       CupertinoContextMenuAction(
+                            //         onPressed: () {
+                            //           Navigator.pop(context);
+                            //         },
+                            //         isDefaultAction: true,
+                            //         trailingIcon: CupertinoIcons.doc_on_clipboard_fill,
+                            //         child: const Text('Copy'),
+                            //       ),
+                            //     ],
+                            //     builder:
+                            //         (BuildContext context, Animation<double> animation) {
+                            //       final Animation<Decoration> boxDecorationAnimation =
+                            //           _boxDecorationAnimation(animation);
+                            //       return Container(
+                            //         decoration: animation.value <
+                            //                 CupertinoContextMenu.animationOpensAt
+                            //             ? boxDecorationAnimation.value
+                            //             : null,
+                            //         child: MessageBubble(
+                            //           message: message,
+                            //           child: Text(message.text),
+                            //         ),
+                            //       );
+                            //     },
+                            //   ),
+                            // );
+                          },
+                        ),
             ),
             SizedBox(
               // height: 70,
@@ -257,6 +329,17 @@ class _ChatRoomState extends State<ChatRoom> {
                     ),
                     IconButton(
                       onPressed: () {
+                        if (chatprovider.chatmessagefetching) {
+                          Fluttertoast.showToast(
+                            msg: "Wait a second!",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                        }
                         sendMessage(
                           senderid: profileprovider.profile!.id,
                           chatid: chatid,

@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         "/chatroom": (context) => const ChatRoom(),
       },
       onGenerateRoute: (settings) {
-        print(settings.name);
+        // print(settings.name);
         switch (settings.name) {
           case "chatroom":
             return AnimationTransition(

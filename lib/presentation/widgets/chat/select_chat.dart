@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
 import 'package:vivavox/presentation/providers/statusprovider.dart';
-import 'package:vivavox/presentation/widgets/snakbar.dart';
 import 'package:vivavox/services/chat/chat_service.dart';
 
 class SelectChatComp extends StatefulWidget {
@@ -111,6 +110,7 @@ class _SelectChatCompState extends State<SelectChatComp> {
                             if (val) {
                               if (!context.mounted) return;
                               Navigator.of(context).pop(true);
+                              Navigator.of(context).pop();
                             }
                           },
                           child: value.chatcreating

@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:vivavox/presentation/pages/chatroom.dart';
+import 'package:vivavox/presentation/providers/chatprovider.dart';
 import 'package:vivavox/presentation/widgets/animation/pageroute/slideanimation.dart';
 
 class UserChatComp extends StatelessWidget {
@@ -25,10 +27,12 @@ class UserChatComp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ChatProvider>(context, listen: false);
     return InkWell(
       overlayColor:
           const MaterialStatePropertyAll(Color.fromARGB(255, 52, 54, 56)),
       onTap: () {
+        provider.resetChat();
         Navigator.of(context).push(
           SlideTransitionRoute(
               pageBuilder: (context, animation, secondaryAnimation) {
@@ -152,6 +156,7 @@ class UserChatComp extends StatelessWidget {
               ? const SizedBox(height: 0, width: 0)
               : Text(
                   lastmessage ?? "",
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(color: Colors.red),
                 ),
         ),

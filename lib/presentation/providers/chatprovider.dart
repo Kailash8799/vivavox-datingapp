@@ -7,8 +7,10 @@ class ChatProvider extends ChangeNotifier {
   List<Messagemodel> _chatmessages = [];
 
   bool _chatfetching = false;
+  bool _chatmessagefetching = false;
   bool _messageadding = false;
   bool get chatfetching => _chatfetching;
+  bool get chatmessagefetching => _chatmessagefetching;
   List<Chatinfo> get allchats => _allchats;
   List<Messagemodel> get chatmessages => _chatmessages;
   bool get messageadding => _messageadding;
@@ -39,10 +41,21 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetChat() {
+    _chatmessages = [];
+    notifyListeners();
+  }
+
+  void addRemoteChat({required Map<String, dynamic> newmessage}) {
+    Messagemodel message = Messagemodel.fromJson(newmessage);
+    _chatmessages.insert(0, message);
+    notifyListeners();
+  }
+
   void fetchPreviousChat({required String chatid}) async {
     try {
-      if (!_chatfetching) {
-        _chatfetching = true;
+      if (!_chatmessagefetching) {
+        _chatmessagefetching = true;
         notifyListeners();
         Map<String, dynamic> res = await ChatService().fetchChatMessages(
           chatid: chatid,
@@ -54,18 +67,18 @@ class ChatProvider extends ChangeNotifier {
               .toList()
               .cast<Messagemodel>();
           _chatmessages = messagelist;
-          notifyListeners();
         }
       }
     } catch (e) {
       debugPrint(e.toString());
     }
 
-    _chatfetching = false;
+    _chatmessagefetching = false;
     notifyListeners();
   }
 
-  void addChat({required Map<String, dynamic> messgaejson}) async {
+  Future<Map<String, dynamic>> addChat(
+      {required Map<String, dynamic> messgaejson}) async {
     _messageadding = true;
     notifyListeners();
     try {
@@ -79,12 +92,15 @@ class ChatProvider extends ChangeNotifier {
         dynamic newmessage = res["newmessage"];
         Messagemodel message = Messagemodel.fromJson(newmessage);
         _chatmessages.insert(0, message);
+        _messageadding = false;
         notifyListeners();
+        return {"success": true, "id": message.messageid};
       }
     } catch (e) {
       debugPrint(e.toString());
     }
     _messageadding = false;
     notifyListeners();
+    return {"success": false};
   }
 }

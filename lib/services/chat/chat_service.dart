@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ChatService {
-  // final String _baseUrl = "http://192.168.185.188:3000";
-  final String _baseUrl = "https://vivavox-backend.vercel.app";
+  // final String _baseUrl = "http://192.168.8.207:3000";
+  final String _baseUrl = "https://vivavox.up.railway.app";
+  // final String _baseUrl = "https://vivavox-backend.vercel.app";
 
   Future<Map<String, dynamic>> createChat({
     required String id,

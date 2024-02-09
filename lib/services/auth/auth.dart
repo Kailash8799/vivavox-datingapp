@@ -5,8 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthUser {
-  // final String _baseUrl = "http://192.168.185.188:3000";
-  final String _baseUrl = "https://vivavox-backend.vercel.app";
+  // final String _baseUrl = "http://192.168.8.207:3000";
+  final String _baseUrl = "https://vivavox.up.railway.app";
+  // final String _baseUrl = "https://vivavox-backend.vercel.app";
 
   Future<Map<String, dynamic>> createUser({
     required String username,
@@ -50,6 +51,7 @@ class AuthUser {
           jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
       return data;
     } catch (e) {
+      print(e);
       return {"success": false, "message": "Some error occurred!"};
     }
   }

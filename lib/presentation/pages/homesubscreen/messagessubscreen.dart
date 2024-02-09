@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vivavox/presentation/pages/selectchat.dart';
@@ -24,7 +25,6 @@ class _MessagesubScreenState extends State<MessagesubScreen> {
   Widget build(BuildContext context) {
     final chatprovider = Provider.of<ChatProvider>(context);
     final profileprovider = Provider.of<ProfileProvider>(context);
-    print(chatprovider.allchats);
     return Scaffold(
       floatingActionButton: TextButton(
         style: ElevatedButton.styleFrom(
@@ -52,40 +52,47 @@ class _MessagesubScreenState extends State<MessagesubScreen> {
           size: 26,
         )),
       ),
-      body: profileprovider.profile == null
+      body: chatprovider.chatfetching
           ? const Center(
-              child: Text(
-                "No chat found",
-                style: TextStyle(color: Colors.white, fontSize: 23),
+              child: CupertinoActivityIndicator(
+                radius: 20,
+                color: Colors.white,
               ),
             )
-          : Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.only(bottom: 10, top: 5),
-                    itemCount: chatprovider.allchats.length,
-                    itemBuilder: (context, index) {
-                      final remoteuser = profileprovider.profile!.id ==
-                              chatprovider.allchats[index].user1.id
-                          ? chatprovider.allchats[index].user2
-                          : chatprovider.allchats[index].user1;
-                      return UserChatComp(
-                        chatid: chatprovider.allchats[index].chatid,
-                        lastmessage:
-                            chatprovider.allchats[index].latestMessage?.message,
-                        lastmessagetime: chatprovider
-                            .allchats[index].latestMessage?.messagetime
-                            .timeAgo(numericDates: false),
-                        userid: remoteuser.id!,
-                        usernmae: remoteuser.username!,
-                        profileimage: remoteuser.profileimage!,
-                      );
-                    },
+          : profileprovider.profile == null
+              ? const Center(
+                  child: Text(
+                    "No chat found",
+                    style: TextStyle(color: Colors.white, fontSize: 23),
                   ),
                 )
-              ],
-            ),
+              : Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.only(bottom: 10, top: 5),
+                        itemCount: chatprovider.allchats.length,
+                        itemBuilder: (context, index) {
+                          final remoteuser = profileprovider.profile!.id ==
+                                  chatprovider.allchats[index].user1.id
+                              ? chatprovider.allchats[index].user2
+                              : chatprovider.allchats[index].user1;
+                          return UserChatComp(
+                            chatid: chatprovider.allchats[index].chatid,
+                            lastmessage: chatprovider
+                                .allchats[index].latestMessage?.message,
+                            lastmessagetime: chatprovider
+                                .allchats[index].latestMessage?.messagetime
+                                .timeAgo(numericDates: false),
+                            userid: remoteuser.id!,
+                            usernmae: remoteuser.username!,
+                            profileimage: remoteuser.profileimage!,
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
     );
   }
 }
