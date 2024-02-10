@@ -5,6 +5,7 @@ import 'package:vivavox/presentation/pages/homesubscreen/likessubscreen.dart';
 import 'package:vivavox/presentation/pages/homesubscreen/messagessubscreen.dart';
 import 'package:vivavox/presentation/pages/homesubscreen/profilesubscreen.dart';
 import 'package:vivavox/presentation/pages/loginscreen.dart';
+import 'package:vivavox/presentation/pages/notificationscreen.dart';
 import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -63,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         AnimationTransition(
                           pageBuilder:
                               (context, animation, secondaryAnimation) {
-                            return const LoginScreen();
+                            return const NotificationScreen();
                           },
                           opaque: false,
                         ),

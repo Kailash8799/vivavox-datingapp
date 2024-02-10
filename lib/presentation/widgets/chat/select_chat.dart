@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
+import 'package:vivavox/presentation/providers/chatprovider.dart';
 import 'package:vivavox/presentation/providers/statusprovider.dart';
 import 'package:vivavox/services/chat/chat_service.dart';
 
@@ -39,6 +40,9 @@ class _SelectChatCompState extends State<SelectChatComp> {
         remoteemail: widget.remoteemail,
       );
       if (responce["success"]) {
+        if (!mounted) return false;
+        final chatprovider = Provider.of<ChatProvider>(context, listen: false);
+        chatprovider.setCreatedChat(dynamicchatList: responce["allchat"]);
         Fluttertoast.showToast(
           msg: responce["message"],
           toastLength: Toast.LENGTH_SHORT,

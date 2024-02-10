@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vivavox/presentation/providers/cardprovider.dart';
+import 'package:vivavox/presentation/widgets/animation/rippleanimation.dart';
 import 'package:vivavox/presentation/widgets/card/vivavoxcard.dart';
 
 class HomesubScreen extends StatefulWidget {
@@ -195,21 +196,39 @@ class _HomesubScreenState extends State<HomesubScreen> {
       context,
     );
     final userprofiles = provider.profileDetails;
-    return userprofiles.isEmpty
-        ? Center(
-            child: ElevatedButton(
-                child: const Text('Restart'),
-                onPressed: () {
-                  provider.initialize();
-                }))
-        : Stack(
-            alignment: AlignmentDirectional.center,
-            children: userprofiles
-                .map((profile) => VivavoxCard(
-                      profile: profile,
-                      isFront: userprofiles.last.id == profile.id,
-                    ))
-                .toList(),
-          );
+    return provider.isProfilefetching
+        ? const RippleAnimation()
+        : userprofiles.isEmpty
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'No such more profiles found!',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton(
+                      child: const Text(
+                        'Try again',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        provider.initialize();
+                      },
+                    ),
+                  ),
+                ],
+              )
+            : Stack(
+                alignment: AlignmentDirectional.center,
+                children: userprofiles
+                    .map((profile) => VivavoxCard(
+                          profile: profile,
+                          isFront: userprofiles.last.id == profile.id,
+                        ))
+                    .toList(),
+              );
   }
 }

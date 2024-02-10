@@ -3,11 +3,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vivavox/utils/constant.dart';
 
 class AuthUser {
-  // final String _baseUrl = "http://192.168.8.207:3000";
-  final String _baseUrl = "https://vivavox.up.railway.app";
-  // final String _baseUrl = "https://vivavox-backend.vercel.app";
+  // final String baseUrl = "http://192.168.8.207:3000";
+  // final String baseUrl = "https://vivavox.up.railway.app";
+  // final String baseUrl = "https://vivavox-backend.vercel.app";
 
   Future<Map<String, dynamic>> createUser({
     required String username,
@@ -16,7 +17,7 @@ class AuthUser {
   }) async {
     try {
       final res = await http.post(
-        Uri.parse("$_baseUrl/v1/users/signup"),
+        Uri.parse("$baseUrl/v1/users/signup"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -40,7 +41,7 @@ class AuthUser {
   }) async {
     try {
       final res = await http.post(
-        Uri.parse("$_baseUrl/v1/users/signin"),
+        Uri.parse("$baseUrl/v1/users/signin"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -61,7 +62,7 @@ class AuthUser {
   }) async {
     try {
       final res = await http.post(
-        Uri.parse("$_baseUrl/v1/users/getprofile"),
+        Uri.parse("$baseUrl/v1/users/getprofile"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -91,7 +92,7 @@ class AuthUser {
   }) async {
     try {
       final res = await http.post(
-        Uri.parse("$_baseUrl/v1/users/getallprofile"),
+        Uri.parse("$baseUrl/v1/users/getallprofile"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -108,7 +109,7 @@ class AuthUser {
   Future<Map<String, dynamic>> resetPassword({required String email}) async {
     try {
       final res = await http.post(
-        Uri.parse("$_baseUrl/v1/users/forgot/sendemail"),
+        Uri.parse("$baseUrl/v1/users/forgot/sendemail"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -130,7 +131,7 @@ class AuthUser {
       required Map<String, dynamic> profiledata}) async {
     try {
       final res = await http.post(
-        Uri.parse("$_baseUrl/v1/users/editprofile"),
+        Uri.parse("$baseUrl/v1/users/editprofile"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -154,7 +155,7 @@ class AuthUser {
       required String? oldimage}) async {
     try {
       var request = http.MultipartRequest(
-          'POST', Uri.parse("$_baseUrl/v1/users/updateprofileimage"));
+          'POST', Uri.parse("$baseUrl/v1/users/updateprofileimage"));
       request.fields["email"] = email;
       request.fields["oldimage"] = oldimage ?? "";
       request.files.add(await http.MultipartFile.fromPath('file', image.path));
@@ -174,7 +175,7 @@ class AuthUser {
       {required String email, required String oldimage}) async {
     try {
       final res = await http.post(
-        Uri.parse("$_baseUrl/v1/users/updateprofileimage/delete"),
+        Uri.parse("$baseUrl/v1/users/updateprofileimage/delete"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -197,7 +198,7 @@ class AuthUser {
       required List<String> oldimage}) async {
     try {
       var request = http.MultipartRequest(
-          'POST', Uri.parse("$_baseUrl/v1/users/uploadimage"));
+          'POST', Uri.parse("$baseUrl/v1/users/uploadimage"));
       request.fields["email"] = email;
       request.fields["oldimages"] = jsonEncode(oldimage);
       request.files.add(await http.MultipartFile.fromPath('file', image.path));
@@ -217,7 +218,7 @@ class AuthUser {
       {required String email, required String oldimage}) async {
     try {
       final res = await http.post(
-        Uri.parse("$_baseUrl/v1/users/uploadimage/delete"),
+        Uri.parse("$baseUrl/v1/users/uploadimage/delete"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

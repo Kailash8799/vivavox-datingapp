@@ -535,29 +535,6 @@ class _ProfilesubScreenState extends State<ProfilesubScreen> {
                   ],
                 )),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: InkWell(
-                  onTap: () {},
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "My listening status",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios_outlined,
-                          size: 20,
-                          color: Colors.white,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
               InkWell(
                 onTap: () {},
                 child: const Padding(

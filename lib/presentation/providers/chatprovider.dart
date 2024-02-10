@@ -41,6 +41,23 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setCreatedChat({required List<dynamic> dynamicchatList}) {
+    try {
+      if (dynamicchatList.length == _allchats.length ||
+          dynamicchatList.isEmpty) {
+        return;
+      }
+      List<Chatinfo> chatlist = dynamicchatList
+          .map((x) => Chatinfo.fromJson(x))
+          .toList()
+          .cast<Chatinfo>();
+      _allchats = chatlist;
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   void resetChat() {
     _chatmessages = [];
     notifyListeners();

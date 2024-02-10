@@ -149,8 +149,10 @@ class CardProvider extends ChangeNotifier {
   void dislike() {
     _angle = -20;
     _position -= Offset(2 * _screenSize.width, 0);
+    final remoteid = _profileDetails.last.id;
+    _allswipe.add(remoteid);
     LikeService().dislikeUser(
-      id: _profileDetails.last.id,
+      id: remoteid,
       email: _email,
       remoteemail: _profileDetails.last.email,
     );
@@ -161,8 +163,10 @@ class CardProvider extends ChangeNotifier {
   void like() {
     _angle = 20;
     _position += Offset(2 * _screenSize.width, 0);
+    final remoteid = _profileDetails.last.id;
+    _allswipe.add(remoteid);
     LikeService().likeUser(
-      id: _profileDetails.last.id,
+      id: remoteid,
       email: _email,
       issuperlike: false,
       remoteemail: _profileDetails.last.email,
@@ -174,8 +178,10 @@ class CardProvider extends ChangeNotifier {
   void superlike() {
     _angle = 0;
     _position -= Offset(0, 2 * _screenSize.height);
+    final remoteid = _profileDetails.last.id;
+    _allswipe.add(remoteid);
     LikeService().likeUser(
-      id: _profileDetails.last.id,
+      id: remoteid,
       email: _email,
       issuperlike: true,
       remoteemail: _profileDetails.last.email,

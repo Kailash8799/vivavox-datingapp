@@ -59,7 +59,7 @@ class _MessagesubScreenState extends State<MessagesubScreen> {
                 color: Colors.white,
               ),
             )
-          : profileprovider.profile == null
+          : profileprovider.profile == null || chatprovider.allchats.isEmpty
               ? const Center(
                   child: Text(
                     "No chat found",

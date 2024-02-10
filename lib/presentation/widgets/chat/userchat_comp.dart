@@ -76,7 +76,7 @@ class UserChatComp extends StatelessWidget {
                       )),
                   TextButton(
                       onPressed: () async {
-                        Navigator.of(context).pop(true);
+                        Navigator.of(context).pop(false);
                       },
                       child: const Text(
                         "YES",
@@ -145,10 +145,12 @@ class UserChatComp extends StatelessWidget {
           ),
           trailing: Text(
             lastmessagetime ?? "",
+            maxLines: 1,
             style: const TextStyle(color: Colors.white, fontSize: 14),
           ),
           title: Text(
             usernmae,
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(color: Colors.white),
           ),
@@ -156,8 +158,9 @@ class UserChatComp extends StatelessWidget {
               ? const SizedBox(height: 0, width: 0)
               : Text(
                   lastmessage ?? "",
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.blueGrey),
                 ),
         ),
       ),
