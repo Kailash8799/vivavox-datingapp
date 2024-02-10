@@ -216,15 +216,13 @@ class CardProvider extends ChangeNotifier {
               .cast<Profileinfo>();
           _profileDetails.insertAll(0, profileList);
           _profilefetchcount++;
-          _profilefetching = false;
-          notifyListeners();
         }
       }
     } catch (e) {
       debugPrint(e.toString());
-      _profilefetching = false;
-      notifyListeners();
     }
+    _profilefetching = false;
+    notifyListeners();
   }
 
   void resetProfiles() async {

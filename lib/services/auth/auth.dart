@@ -6,9 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vivavox/utils/constant.dart';
 
 class AuthUser {
-  // final String baseUrl = "http://192.168.8.207:3000";
-  // final String baseUrl = "https://vivavox.up.railway.app";
-  // final String baseUrl = "https://vivavox-backend.vercel.app";
 
   Future<Map<String, dynamic>> createUser({
     required String username,
