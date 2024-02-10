@@ -24,6 +24,8 @@ class ChatRoom extends StatefulWidget {
 class _ChatRoomState extends State<ChatRoom> {
   final TextEditingController _chatController = TextEditingController();
   late IO.Socket socket;
+  // final String _baseUrl = "http://192.168.8.207:3000";
+  final String _baseUrl = "https://vivavox.up.railway.app";
   String? roomId;
 
   @override
@@ -45,7 +47,7 @@ class _ChatRoomState extends State<ChatRoom> {
   void connectSocket(String roomId) {
     try {
       socket = IO.io(
-          'http://192.168.8.207:3000',
+          _baseUrl,
           IO.OptionBuilder()
               .setTransports(['websocket']) // for Flutter or Dart VM
               .disableAutoConnect() // optional
@@ -59,12 +61,14 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   void newMessage(data) {
+    print(data);
+    if (!mounted) return;
     final chatProvider = Provider.of<ChatProvider>(context, listen: false);
     chatProvider.addRemoteChat(newmessage: data);
-    print(data);
   }
 
   void dispoceConnection() {
+    if (!mounted) return;
     socket.disconnect();
   }
 
