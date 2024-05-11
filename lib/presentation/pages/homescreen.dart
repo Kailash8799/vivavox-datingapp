@@ -4,7 +4,6 @@ import 'package:vivavox/presentation/pages/homesubscreen/homesubscreen.dart';
 import 'package:vivavox/presentation/pages/homesubscreen/likessubscreen.dart';
 import 'package:vivavox/presentation/pages/homesubscreen/messagessubscreen.dart';
 import 'package:vivavox/presentation/pages/homesubscreen/profilesubscreen.dart';
-import 'package:vivavox/presentation/pages/loginscreen.dart';
 import 'package:vivavox/presentation/pages/notificationscreen.dart';
 import 'package:vivavox/presentation/widgets/animation/pagetransaction.dart';
 
